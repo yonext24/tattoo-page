@@ -15,9 +15,9 @@ export function Seo ({ title, image, description }: Props) {
     <Head>
       <title>{title}</title>
       <meta name='og:title' content={title} />
-      {description && <meta name='description' content={description} />}
-      {description && <meta name='og:description' content={description} />}
-      {image && <meta property='og:image' content={image} />}
+      {description ?? <meta name='description' content={description} />}
+      {description ?? <meta name='og:description' content={description} />}
+      {image ?? <meta property='og:image' content={image} />}
       <meta
         name='og:url'
         content={`${siteURL}${asPath === '/' ? '' : asPath}`}
