@@ -1,12 +1,13 @@
 import { Layout } from '@/components/common/layout'
 import { Seo } from '@/components/common/seo'
-import { Spinner } from '@/components/common/spinner'
-import { type TattooModalProps } from '@/components/modals/tattooModal/tattoo-modal-wide'
+import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
 import { TattooSection } from '@/components/tattoo/tattoo-section'
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver'
 import { useModalContext } from '@/hooks/useModalContext'
+import { useWindowContext } from '@/hooks/useWindowContext'
 import { getTattoos } from '@/lib/firebase/utils'
 import { type Tattoo } from '@/lib/types/tattoo'
+import { type TattooModalProps } from '@/lib/types/tattooModal'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
 
@@ -15,12 +16,15 @@ interface Props {
   error?: boolean
 }
 
-const TattooModal = dynamic(async (): Promise<React.ComponentType<TattooModalProps>> => await import('@/components/modals/tattooModal/tattoo-modal-wide').then(module => module.default),
-  { loading: () => <div className='fixed top-0 left-0 w-screen h-screen flex justify-center items-center'><Spinner className='w-16 h-16' /></div> })
+const TattooModalWide = dynamic(async (): Promise<React.ComponentType<TattooModalProps>> => await import('@/components/modals/tattooModal/tattoo-modal-wide').then(module => module.default),
+  { loading: () => <TattooModalFallback /> })
+const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooModalProps>> => await import('@/components/modals/tattooModal/tattoo-modal-mobile').then(module => module.default),
+  { loading: () => <TattooModalFallback /> })
 
 export default function Tatuajes ({ tattoos, error }: Props) {
   const { fromRef, intersecting: intersected } = useIntersectionObserver({ once: true })
   const { state } = useModalContext() ?? {}
+  const { isMobile } = useWindowContext() ?? {}
 
   return <>
     <Seo title='Neptuno Black Tattoos Page' />
@@ -33,7 +37,9 @@ export default function Tatuajes ({ tattoos, error }: Props) {
       }
     </main>
     {
-      (state?.open !== undefined) && ((state?.tattoo) != null) && <TattooModal tattoo={state.tattoo} />
+      (isMobile ?? false)
+        ? (state?.open !== undefined) && ((state?.tattoo) != null) && state.open && <TattooModalMobile tattoo={state.tattoo} />
+        : (state?.open !== undefined) && ((state?.tattoo) != null) && state.open && <TattooModalWide tattoo={state.tattoo} />
     }
   </>
 }

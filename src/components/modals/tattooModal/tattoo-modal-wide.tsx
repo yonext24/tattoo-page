@@ -2,12 +2,8 @@ import { ImageWithLoader } from '@/components/common/image-with-loader'
 import { Logo } from '@/components/common/logo'
 import { useModalContext } from '@/hooks/useModalContext'
 import { useModalLogic } from '@/hooks/useModalLogic'
-import { type Tattoo } from '@/lib/types/tattoo'
+import { type TattooModalProps } from '@/lib/types/tattooModal'
 import { useState } from 'react'
-
-export interface TattooModalProps {
-  tattoo: Tattoo
-}
 
 const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
   const { imagesData: { original: { url, height, width } }, nombre, descripcion, estilos, lugar, duracion } = tattoo
@@ -26,10 +22,10 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
   }
   useModalLogic({ closeModal })
 
-  return <div id='modal-background' className='fixed top-0 left-0 w-full h-full bg-black/80 backdrop-blur-md flex items-center justify-center' onClick={closeModal}>
-    <div onClick={e => { e.stopPropagation() }} className='flex h-[90%] w-11/12 max-w-5xl p-1 border-2 border-white mt-2 rounded-lg justify-center'>
-
-      <div className={'relative'} style={{ aspectRatio }}>
+  return <div id='modal-background' className='fixed z-10 top-0 left-0 w-full h-full bg-black/80 supports-[backdrop-blur]:bg-black/95 backdrop-blur-md flex items-center justify-center overflow-auto' onClick={closeModal}>
+    <div onClick={e => { e.stopPropagation() }} className='flex h-[90%] w-11/12 max-w-5xl p-1 border-2 border-white mt-2 rounded-lg justify-center
+    max-[730px]:w-full max-[665px]:h-[82%]'>
+      <div className={'relative imageAspect'} style={{ aspectRatio }}>
         <ImageWithLoader
           url={url}
           width={width / 2}
@@ -40,12 +36,12 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
           loaderClassname='top-0 left-0 w-full h-full flex bg-gradient-to-br from-transparent via-transparent to-white/25'
         />
       </div>
-      <div className='flex-1 py-4 px-6 relative'>
-        <h2 className='text-end title text-5xl mb-3'>{nombre}</h2>
-        <div className='max-w-xs ml-auto'>
-          <p className='max-w-xs text-end ml-auto inline'>{descripcion}.
+      <div className='flex-1 py-4 px-6 relative pl-8 min-w-[278px] max-[770px]:pr-px '>
+        <h2 className='text-end title text-5xl mb-3 max-[770px]:text-center max-[665px]:text-4xl'>{nombre}</h2>
+        <div className='max-w-xs ml-auto max-[830px]:pr-px text-center'>
+          <p className='max-w-xs ml-auto inline max-[665px]:text-sm'>{descripcion}.
+            <span className='inline text-gold'> Hecho en {lugar} en una duración de {duracion}</span>
           </p>
-          <span className='inline text-gold'> Hecho en {lugar} en una duración de {duracion}</span>
         </div>
         <div className='bg-white absolute bottom-0 left-1 h-full justify-end [&>span]:[writing-mode:vertical-lr] text-black flex flex-col rounded-sm gap-y-2 py-2'>
           {

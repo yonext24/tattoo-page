@@ -11,6 +11,7 @@ module.exports = {
         pageblack: '#020202',
         gold: 'rgb(157 109 66)'
       }
+
     }
   },
   plugins: []

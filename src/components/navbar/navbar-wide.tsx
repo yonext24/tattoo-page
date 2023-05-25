@@ -1,11 +1,5 @@
+import { navEntrys } from '@/lib/navEntrys'
 import { NavEntry } from './nav-entry'
-
-const map = [
-  { name: 'Home', url: '/' },
-  { name: 'Tatuajes', url: '/tatuajes' },
-  { name: 'Diseños', url: '/' },
-  { name: 'Búsqueda', url: '/' }
-]
 
 export default function Navbar () {
   return <>
@@ -17,7 +11,7 @@ export default function Navbar () {
     </div>
     <ul className='text-2xl tracking-widest flex flex-col gap-y-1 m-auto [&>li]:cursor-pointer'>
       {
-        map.map(el => <NavEntry url={el.url} name={el.name} key={el.name} />)
+        navEntrys.map(el => <NavEntry url={el.url} name={el.name} key={el.name} />)
       }
     </ul>
   </nav>

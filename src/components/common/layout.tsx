@@ -1,9 +1,11 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable react/no-unknown-property */
 import dynamic from 'next/dynamic'
-import { Suspense, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Poppins, Racing_Sans_One } from 'next/font/google'
 import { useWindowContext } from '@/hooks/useWindowContext'
+import { NavMobFallback } from '../fallbacks/nav-mob-fallback'
+import { NavWideFallback } from '../fallbacks/nav-wide-fallback'
 
 const poppins = Poppins({
   weight: ['400', '700', '600'],
@@ -19,34 +21,30 @@ const titleFont = Racing_Sans_One({
   variable: '--title'
 })
 
-const WideNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-wide').then(module => module.default),
-  { ssr: false })
-const MobileNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-mobile').then(module => module.default),
-  { ssr: false })
+const pro = async (res: React.ComponentType): Promise<React.ComponentType> => {
+  return await new Promise(resolve => {
+    setTimeout(() => { resolve(res) }, 500)
+  })
+}
+
+const WideNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-wide').then(module => module.default).then(pro),
+  { ssr: false, loading: () => <NavWideFallback /> })
+const MobileNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/header-mobile').then(module => module.default).then(pro),
+  { ssr: false, loading: () => <NavMobFallback /> })
 
 export function Layout ({ children }: { children: ReactNode }) {
   const { isMobile } = useWindowContext() ?? {}
 
   return <>
-    <div className={`flex h-full w-full ${Boolean(isMobile) ? 'flex-col' : ''} ${poppins.variable} ${titleFont.variable}`}>
+    <div className={`flex flex-row-reverse h-full w-full [&>main]:overflow-x-hidden ${Boolean(isMobile) ? 'flex-col-reverse' : ''} ${poppins.variable} ${titleFont.variable}`}>
+      {children}
+
       {
         isMobile === null
-          ? null
+          ? <div className='fixed z-100 bg-black top-0 left-0 w-screen h-screen flex justify-center items-center'></div>
           : Boolean(isMobile)
-            ? (
-              <Suspense fallback={<div className='fixed z-100 bg-black top-0 left-0 w-screen h-screen flex justify-center items-center'></div>}>
-                <MobileNavbar />
-              </Suspense>
-              )
-            : (
-              <Suspense fallback={<div className='fixed z-100 bg-black top-0 left-0 w-screen h-screen flex justify-center items-center'></div>}>
-                <WideNavbar />
-              </Suspense>
-              )
-      }
-      {children}
-      {
-        isMobile === null && <div className='fixed z-100 bg-black top-0 left-0 w-screen h-screen flex justify-center items-center'></div>
+            ? <MobileNavbar />
+            : <WideNavbar />
       }
     </div>
     <style jsx global>{`
