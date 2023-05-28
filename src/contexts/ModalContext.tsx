@@ -9,7 +9,7 @@ interface MyContextType {
 
 export const ModalContext = createContext<MyContextType | undefined>(undefined)
 
-export const INITIAL_STATE: StateType = { open: false, tattoo: null }
+export const INITIAL_STATE: StateType = { open: false, tattoo: null, design: null }
 
 export const ModalContextProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(modalReducer, INITIAL_STATE)

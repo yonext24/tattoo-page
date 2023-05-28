@@ -21,15 +21,9 @@ const titleFont = Racing_Sans_One({
   variable: '--title'
 })
 
-const pro = async (res: React.ComponentType): Promise<React.ComponentType> => {
-  return await new Promise(resolve => {
-    setTimeout(() => { resolve(res) }, 500)
-  })
-}
-
-const WideNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-wide').then(module => module.default).then(pro),
+const WideNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-wide').then(module => module.default),
   { ssr: false, loading: () => <NavWideFallback /> })
-const MobileNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/header-mobile').then(module => module.default).then(pro),
+const MobileNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/header-mobile').then(module => module.default),
   { ssr: false, loading: () => <NavMobFallback /> })
 
 export function Layout ({ children }: { children: ReactNode }) {

@@ -1,12 +1,11 @@
-import { type ReactNode } from 'react'
+import { type HTMLAttributes, type ReactNode } from 'react'
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
-  className?: string
 }
 
-export function Outline ({ children, className }: Props) {
-  return <div className={`p-1 border-2 border-white mt-2 rounded-lg flex justify-center ${className ?? ''}`}>
+export function Outline ({ children, ...props }: Props) {
+  return <div {...props} className={`p-1 border-2 border-white mt-2 rounded-lg flex justify-center ${props.className ?? ''}`}>
     { children }
   </div>
 }

@@ -12,7 +12,7 @@ export function TattooCard ({ tattoo }: { tattoo: Tattoo }) {
 
   const { dispatch } = useModalContext() ?? {}
   const handleClick = () => {
-    dispatch?.({ type: 'openModal', payload: tattoo })
+    dispatch?.({ type: 'openTattoo', payload: tattoo })
   }
 
   return (
@@ -22,12 +22,12 @@ export function TattooCard ({ tattoo }: { tattoo: Tattoo }) {
           url={url}
           width={width}
           height={height}
+          sizes='(max-width: 576px) 40vw, (max-width: 630px) 250px, (max-width: 971px) 30vw,'
           handleLoad={handleLoad}
           loaded={loaded}
           imageClassname='rounded-[inherit] group-hover:scale-110 transition-transform duration-200 ease-out'
           loaderClassname='top-1 left-1 w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] flex bg-gradient-to-br from-transparent via-transparent to-white/25'
         />
-
         <TattooFooter name={nombre} loaded={loaded} />
       </Outline>
     </article>

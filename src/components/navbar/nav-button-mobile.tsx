@@ -6,7 +6,7 @@ interface Props {
 }
 
 export function NavButtonMobile ({ isOpen, handleOpen }: Props) {
-  return <button onClick={handleOpen}>
+  return <button name='Open Navbar' onClick={handleOpen}>
     <MenuIcon className='w-7 h-7' />
   </button>
 }

@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { getDocs, query, where } from 'firebase/firestore'
+import { getDocs } from 'firebase/firestore'
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { auth } from './app'
-import { tattoosCollection } from './collections'
+import { designsCollection, tattoosCollection } from './collections'
 
 export const iniciarSesion = async (
   password: string,
@@ -32,13 +32,13 @@ export const getTattoos = async () => {
       })
     })
 }
-export const getHomeTattoos = async () => {
-  const q = query(tattoosCollection, where('homeVisible', '==', true))
 
-  return await getDocs(q).then(snapshot => {
-    return snapshot.docs.map(doc => {
-      const data = doc.data()
-      return { ...data }
+export const getDesigns = async () => {
+  return await getDocs(designsCollection)
+    .then(snapshot => {
+      return snapshot.docs.map(doc => {
+        const data = doc.data()
+        return { ...data }
+      })
     })
-  })
 }

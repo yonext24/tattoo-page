@@ -9,6 +9,6 @@ interface Props {
 export function Glitch ({ children, text, className }: Props) {
   return <div className='relative z-0'>
     {children}
-    <span className={`absolute text-gold select-none whitespace-nowrap -z-10 ${className ?? ''}`}>{text}</span>
+    <span className={`absolute select-none whitespace-nowrap -z-10 ${className ?? ''}`}>{text}</span>
   </div>
 }

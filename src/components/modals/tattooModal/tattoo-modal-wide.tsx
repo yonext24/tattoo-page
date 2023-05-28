@@ -43,7 +43,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
             <span className='inline text-gold'> Hecho en {lugar} en una duración de {duracion}</span>
           </p>
         </div>
-        <div className='bg-white absolute bottom-0 left-1 h-full justify-end [&>span]:[writing-mode:vertical-lr] text-black flex flex-col rounded-sm gap-y-2 py-2'>
+        <div className='bg-white absolute -bottom-1 left-1 h-[calc(100%+.5rem)] justify-end [&>span]:[writing-mode:vertical-lr] text-black flex flex-col gap-y-2 py-2'>
           {
             estilos.map(el => <span key={el}>{el}</span>)
           }
