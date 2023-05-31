@@ -40,7 +40,7 @@ export default function TattooModalMobile ({ tattoo }: { tattoo: Tattoo }) {
             }
           </div>
         </div>
-          <h1 className='title text-3xl text-end'>{nombre}</h1>
+          <h1 className='title text-3xl text-end capitalize'>{nombre}</h1>
       </Outline>
       <CloseModalButton closeModal={closeModal}/>
     </div>

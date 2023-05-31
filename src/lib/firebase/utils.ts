@@ -4,6 +4,7 @@ import { getDocs } from 'firebase/firestore'
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { auth } from './app'
 import { designsCollection, tattoosCollection } from './collections'
+import { type Tattoo } from '../types/tattoo'
 
 export const iniciarSesion = async (
   password: string,
@@ -31,6 +32,17 @@ export const getTattoos = async () => {
         return { ...data }
       })
     })
+}
+
+export const searchTatttoos = async ({ search }: { search: string }): Promise<Tattoo[]> => {
+  const tattoos = await getTattoos()
+
+  const parsed = tattoos.filter(({ nombre, estilos, lugar }) => {
+    if (nombre.includes(search) || estilos.includes(search) || lugar.includes(search)) return true
+    return false
+  })
+
+  return parsed
 }
 
 export const getDesigns = async () => {

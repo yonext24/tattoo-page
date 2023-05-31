@@ -3,19 +3,20 @@ import { DesignSection } from '@/components/design/design-section'
 import { useFade } from '@/hooks/useFade'
 import { getDesigns } from '@/lib/firebase/utils'
 import { type Design } from '@/lib/types/design'
+import { waitFunc } from '@/lib/waitFunc'
 import { type ReactNode } from 'react'
 
 interface PageProps {
-  err?: boolean
+  error?: string
   designs?: Design[]
 }
 
-export default function Designs ({ err, designs }: PageProps) {
+export default function Designs ({ error, designs }: PageProps) {
   const { intersected } = useFade()
 
   return <main className='flex-1 pr-2 h-max'>
     {
-      (err ?? false) && <span>Error al recuperar los diseños</span>
+      Boolean(error) && <span>{error}</span>
     }
     {
       (designs !== undefined) && <DesignSection intersected={intersected} designs={designs} />
@@ -29,16 +30,17 @@ Designs.getLayout = (page: ReactNode) => <Layout>
 
 export const getServerSideProps = async () => {
   try {
-    const designs = await getDesigns()
+    const designs = await waitFunc(getDesigns, 5000, 'No se pudo obtener los diseños.')
     return {
       props: {
         designs
       }
     }
-  } catch {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return {
       props: {
-        err: true
+        error: errorMessage
       }
     }
   }

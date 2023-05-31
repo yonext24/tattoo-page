@@ -37,7 +37,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
         />
       </div>
       <div className='flex-1 py-4 px-6 relative pl-8 min-w-[278px] max-[770px]:pr-px '>
-        <h2 className='text-end title text-5xl mb-3 max-[770px]:text-center max-[665px]:text-4xl'>{nombre}</h2>
+        <h2 className='text-end title text-5xl mb-3 max-[770px]:text-center max-[665px]:text-4xl capitalize'>{nombre}</h2>
         <div className='max-w-xs ml-auto max-[830px]:pr-px text-center'>
           <p className='max-w-xs ml-auto inline max-[665px]:text-sm'>{descripcion}.
             <span className='inline text-gold'> Hecho en {lugar} en una duración de {duracion}</span>
@@ -49,7 +49,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
           }
         </div>
         <div className='absolute bottom-2 right-2'>
-          <Logo className='w-20' />
+          <Logo brightness='[20]' className='w-20' />
         </div>
       </div>
     </div>
