@@ -9,9 +9,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
   const { imagesData: { original: { url, height, width } }, nombre, descripcion, estilos, lugar, duracion } = tattoo
   const [loaded, setLoaded] = useState<boolean>(false)
   const handleLoad = () => {
-    setTimeout(() => {
-      setLoaded(true)
-    }, 2000)
+    setLoaded(true)
   }
   const aspectRatio = width / height
 
@@ -24,7 +22,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
 
   return <div id='modal-background' className='fixed z-10 top-0 left-0 w-full h-full bg-black/80 supports-[backdrop-blur]:bg-black/95 backdrop-blur-md flex items-center justify-center overflow-auto' onClick={closeModal}>
     <div onClick={e => { e.stopPropagation() }} className='flex h-[90%] w-11/12 max-w-5xl p-1 border-2 border-white mt-2 rounded-lg justify-center
-    max-[730px]:w-full max-[665px]:h-[82%]'>
+    max-[790px]:w-full max-[730px]:h-[82%]'>
       <div className={'relative imageAspect'} style={{ aspectRatio }}>
         <ImageWithLoader
           url={url}

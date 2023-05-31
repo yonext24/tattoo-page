@@ -12,7 +12,7 @@ export function DesignCard ({ design }: Props) {
   const { imageUrl, precio } = design
   const [loaded, setLoaded] = useState<boolean>(false)
   const handleLoad = () => {
-    setTimeout(() => { setLoaded(true) }, 2000)
+    setLoaded(true)
   }
   const { dispatch } = useModalContext() ?? {}
   const handleClick = () => {

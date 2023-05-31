@@ -29,8 +29,8 @@ export default function Tatuajes ({ tattoos, error }: Props) {
   const { isMobile } = useWindowContext() ?? {}
 
   return <>
-    <Seo title='Neptuno Black Tattoos Page' />
-    <main className='flex-1 pr-2 h-max' >
+    <Seo title='Tattooos / Neptuno Black Tattoos' description='Página de tatuajes de Neptuno Black.' image='/logo.webp' />
+    <main className='flex-1 pr-2 h-max max-w-xl' >
       <PageHeading text='Tatuajes' intersected={intersected} />
       {
         error !== undefined && error !== null && <div>{error}</div>

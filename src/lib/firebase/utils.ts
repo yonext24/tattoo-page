@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { getDocs } from 'firebase/firestore'
+import { doc, getDoc, getDocs } from 'firebase/firestore'
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { auth } from './app'
 import { designsCollection, tattoosCollection } from './collections'
@@ -31,6 +31,18 @@ export const getTattoos = async () => {
         const data = doc.data()
         return { ...data }
       })
+    })
+}
+
+export const getSingleTattoo = async (id: string) => {
+  const docRef = doc(tattoosCollection, id)
+  return await getDoc(docRef)
+    .then(doc => {
+      if (!doc.exists()) {
+        throw new Error('No se encontró el tatuaje.')
+      }
+      const data = doc.data()
+      return { ...data }
     })
 }
 

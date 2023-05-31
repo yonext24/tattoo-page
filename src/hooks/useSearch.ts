@@ -3,19 +3,49 @@ import { type Tattoo } from '@/lib/types/tattoo'
 import { INITIAL_STATE, searchReducer } from '@/reducers/searchReducer'
 
 import debounce from 'just-debounce-it'
-import { useState, useEffect, useCallback, useReducer } from 'react'
+import { useState, useEffect, useCallback, useReducer, useRef } from 'react'
+import { useModalContext } from './useModalContext'
 
 interface Props {
   tattoos: Tattoo[] | undefined
   query: string
+  singleTattoo: Tattoo | undefined
+  serverError: string | undefined
 }
 
-export function useSearch ({ tattoos, query }: Props) {
+export function useSearch ({ tattoos, query, singleTattoo, serverError }: Props) {
   const [value, setValue] = useState<string>(query)
   const [state, dispatch] = useReducer(searchReducer, INITIAL_STATE)
+  const { state: modalState, dispatch: modalDispatch } = useModalContext() ?? {}
+
+  const modalOpened = useRef<boolean>(false)
 
   useEffect(() => {
-    if (tattoos !== undefined) {
+    if (serverError !== undefined) {
+      dispatch({ type: 'FETCH_FAILURE', payload: serverError })
+    }
+  }, [serverError])
+
+  useEffect(() => {
+    if (modalState?.open === false && singleTattoo !== undefined && modalOpened.current) {
+      getTattoos('')
+    }
+  }, [modalOpened.current])
+
+  useEffect(() => {
+    if ((modalState?.open ?? false) && !modalOpened.current) {
+      modalOpened.current = true
+    }
+  }, [modalState?.open])
+
+  useEffect(() => {
+    if (singleTattoo !== undefined) {
+      modalDispatch?.({ type: 'openTattoo', payload: singleTattoo })
+    }
+  }, [singleTattoo])
+
+  useEffect(() => {
+    if (tattoos !== undefined && state.tattoos.length === 0) {
       dispatch({ type: 'setServerTattoos', payload: tattoos })
     }
   }, [tattoos])
