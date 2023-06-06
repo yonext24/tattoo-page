@@ -1,4 +1,5 @@
-import { Layout } from '@/components/common/layout'
+import { Footer } from '@/components/common/footer'
+import { Layout } from '@/components/layout/layout'
 import { PageHeading } from '@/components/common/page-heading'
 import { Seo } from '@/components/common/seo'
 import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
@@ -7,11 +8,11 @@ import { useFade } from '@/hooks/useFade'
 import { useModalContext } from '@/hooks/useModalContext'
 import { useWindowContext } from '@/hooks/useWindowContext'
 import { getTattoos } from '@/lib/firebase/utils'
-import { type Tattoo } from '@/lib/types/tattoo'
 import { type TattooModalProps } from '@/lib/types/tattooModal'
 import { waitFunc } from '@/lib/waitFunc'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
+import { type Tattoo } from '@/lib/types/tattoo'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -24,13 +25,14 @@ const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooMo
   { loading: () => <TattooModalFallback /> })
 
 export default function Tatuajes ({ tattoos, error }: Props) {
+  console.log(tattoos)
   const { intersected } = useFade()
   const { state } = useModalContext() ?? {}
   const { isMobile } = useWindowContext() ?? {}
 
   return <>
-    <Seo title='Tattooos / Neptuno Black Tattoos' description='Página de tatuajes de Neptuno Black.' image='/logo.webp' />
-    <main className='flex-1 pr-2 h-max max-w-xl' >
+    <Seo title='Tattooos / Neptuno Black' description='Página de tatuajes de Neptuno Black.' image='/logo.webp' />
+    <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none' >
       <PageHeading text='Tatuajes' intersected={intersected} />
       {
         error !== undefined && error !== null && <div>{error}</div>
@@ -38,6 +40,7 @@ export default function Tatuajes ({ tattoos, error }: Props) {
       {
         tattoos !== undefined && <TattooSection tattoos={tattoos} intersected={intersected} />
       }
+      <Footer />
     </main>
     {
       (isMobile ?? false)
@@ -54,6 +57,7 @@ Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>
 export async function getServerSideProps () {
   try {
     const tattoos = await waitFunc<Tattoo[]>(getTattoos, 5000, 'No se pudo recuperar los tatuajes')
+    console.log(tattoos)
     return {
       props: {
         tattoos

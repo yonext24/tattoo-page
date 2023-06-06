@@ -1,39 +1,29 @@
 import { type QueryDocumentSnapshot, type SnapshotOptions } from 'firebase/firestore'
 
-export interface Tattoo {
-  id: string
-  descripcion: string
-  duracion: string
-  estilos: string[]
-  homeVisible: boolean
-  imagesData: {
-    original: {
-      height: number
-      width: number
-      path: string
-      url: string
-      xAxis: number
-      yAxis: number
-      zoom: string
-    }
-    preview: {
-      height: number
-      width: number
-      path: string
-      url: string
-      xAxis: number
-      yAxis: number
-      zoom: string
-    }
-  }
-  lugar: string
-  nombre: string
+export interface ImagesData {
+  src: string
+  width: number
+  height: number
+  path: string
 }
 
-export const tattooConverter = {
+export interface Tattoo {
+  id: string
+  image: ImagesData
+  nombre: string
+  descripcion: string
+  homeVisible: boolean
+  estilos: string[]
+  lugar: string
+  duracion: string
+}
+
+export const newTattooConverter = {
   toFirestore (tattoo: Tattoo) {
-    return { ...tattoo }
+    const { id, ...data } = tattoo
+    return { ...data }
   },
+
   fromFirestore (
     snapshot: QueryDocumentSnapshot,
     options: SnapshotOptions

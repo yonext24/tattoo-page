@@ -21,7 +21,7 @@ export function Seo ({ title, image, description }: Props) {
       {image !== undefined && <meta property='og:image' content={image} />}
       <meta
         name='og:url'
-        content={`${siteURL}${asPath === '/' ? '' : asPath}`}
+        content={`${siteURL as string}${asPath === '/' ? '' : asPath}`}
       />
     </Head>
   )

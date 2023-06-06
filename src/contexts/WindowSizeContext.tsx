@@ -13,13 +13,13 @@ export const WindowSizeContextProvider = ({ children }: { children: ReactNode })
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    setIsMobile(window.innerWidth < 630)
+    setIsMobile(window.innerWidth <= 630)
 
     const handleResize = (e: Event) => {
       const target = e.target as Window
 
-      if (target.innerWidth < 630 && !Boolean(isMobile)) setIsMobile(true)
-      else if (target.innerWidth >= 630 && !Boolean(isMobile)) setIsMobile(false)
+      if (target.innerWidth <= 630 && !Boolean(isMobile)) setIsMobile(true)
+      else if (target.innerWidth > 630 && !Boolean(isMobile)) setIsMobile(false)
     }
 
     window.addEventListener('resize', handleResize)

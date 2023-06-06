@@ -1,4 +1,5 @@
-import { Layout } from '@/components/common/layout'
+import { Footer } from '@/components/common/footer'
+import { Layout } from '@/components/layout/layout'
 import { PageHeading } from '@/components/common/page-heading'
 import { Seo } from '@/components/common/seo'
 import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
@@ -38,7 +39,7 @@ export default function Busqueda ({ tattoos: serverTattoos, error: serverError, 
   return <>
     {
       singleTattoo !== undefined
-        ? <Seo title={`${singleTattoo.nombre.charAt(0).toUpperCase()}${singleTattoo.nombre.slice(1)}` + ' / Neptuno Black'} image={singleTattoo.imagesData.preview.url} description={singleTattoo.descripcion} />
+        ? <Seo title={`${singleTattoo.nombre.charAt(0).toUpperCase()}${singleTattoo.nombre.slice(1)}` + ' / Neptuno Black'} image={singleTattoo.image.src} description={singleTattoo.descripcion} />
         : <Seo title='Búsqueda / Neptuno Black' description='Página de búsqueda de tatuajes de Neptuno Black.' image='/logo.webp' />
     }
 
@@ -49,6 +50,7 @@ export default function Busqueda ({ tattoos: serverTattoos, error: serverError, 
       <div className='relative flex-1 w-full'>
         <SearchRender loading={loading} error={error} tattoos={tattoos} intersected={intersected} />
       </div>
+      <Footer />
     </main>
     {
       (isMobile ?? false)
@@ -65,8 +67,6 @@ Busqueda.getLayout = (page: ReactNode) => <Layout>
 export async function getServerSideProps (context: GetServerSidePropsContext) {
   const search = String(context.query.search ?? '')
   const singleTattoo = String(context.query.tattoo ?? '')
-
-  console.log({ search, singleTattoo })
 
   if (singleTattoo !== '') {
     try {

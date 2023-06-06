@@ -1,13 +1,16 @@
 import { ImageWithLoader } from '@/components/common/image-with-loader'
 import { Logo } from '@/components/common/logo'
+import { Options } from '@/components/options/options'
 import { useModalContext } from '@/hooks/useModalContext'
 import { useModalLogic } from '@/hooks/useModalLogic'
+import useUser from '@/hooks/useUser'
 import { type TattooModalProps } from '@/lib/types/tattooModal'
 import { useState } from 'react'
 
 const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
-  const { imagesData: { original: { url, height, width } }, nombre, descripcion, estilos, lugar, duracion } = tattoo
+  const { image: { src, height, width }, nombre, descripcion, estilos, lugar, duracion } = tattoo
   const [loaded, setLoaded] = useState<boolean>(false)
+  const admin = useUser()
   const handleLoad = () => {
     setLoaded(true)
   }
@@ -21,14 +24,15 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
   useModalLogic({ closeModal })
 
   return <div id='modal-background' className='fixed z-10 top-0 left-0 w-full h-full bg-black/80 supports-[backdrop-blur]:bg-black/95 backdrop-blur-md flex items-center justify-center overflow-auto' onClick={closeModal}>
-    <div onClick={e => { e.stopPropagation() }} className='flex h-[90%] w-11/12 max-w-5xl p-1 border-2 border-white mt-2 rounded-lg justify-center
+    <div onClick={e => { e.stopPropagation() }} className='flex relative h-[90%] w-11/12 max-w-5xl p-1 border-2 border-white mt-2 rounded-lg justify-center
     max-[790px]:w-full max-[730px]:h-[82%]'>
       <div className={'relative imageAspect'} style={{ aspectRatio }}>
         <ImageWithLoader
-          url={url}
+          url={src}
           width={width / 2}
           height={height / 2}
           loaded={loaded}
+          sizes='90vh'
           handleLoad={handleLoad}
           imageClassname='object-contain h-full rounded-l-lg'
           loaderClassname='top-0 left-0 w-full h-full flex bg-gradient-to-br from-transparent via-transparent to-white/25'
@@ -50,6 +54,12 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
           <Logo brightness='[20]' className='w-20' />
         </div>
       </div>
+      {
+        Boolean(admin) &&
+        <div className='absolute top-4 left-4 z-20'>
+          <Options id={tattoo.id} />
+        </div>
+      }
     </div>
 
   </div>

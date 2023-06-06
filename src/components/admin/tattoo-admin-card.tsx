@@ -1,25 +1,24 @@
-import { Outline } from '../common/outline'
 import { useState } from 'react'
-import { TattooFooter } from './tattoo-footer'
-import { type Tattoo } from '@/lib/types/tattoo'
-import { useModalContext } from '@/hooks/useModalContext'
+import { Outline } from '../common/outline'
 import { ImageWithLoader } from '../common/image-with-loader'
+import { TattooFooter } from '../tattoo/tattoo-footer'
 
-export function TattooCard ({ tattoo }: { tattoo: Tattoo }) {
-  const { image: { src, width, height }, nombre } = tattoo
+interface Props {
+  url: string
+  width: number
+  height: number
+  nombre: string
+}
+
+export function TattooAdminCard ({ url, width, height, nombre }: Props) {
   const [loaded, setLoaded] = useState<boolean>(false)
   const handleLoad = () => { setLoaded(true) }
 
-  const { dispatch } = useModalContext() ?? {}
-  const handleClick = () => {
-    dispatch?.({ type: 'openTattoo', payload: tattoo })
-  }
-
   return (
-    <article onClick={handleClick}>
+    <article>
       <Outline className='relative group overflow-hidden cursor-pointer'>
         <ImageWithLoader
-          url={src}
+          url={url}
           width={width}
           height={height}
           sizes='(max-width: 576px) 40vw, (max-width: 630px) 250px, (max-width: 971px) 30vw,'

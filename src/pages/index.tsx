@@ -1,5 +1,6 @@
+import { Footer } from '@/components/common/footer'
 import { Glitch } from '@/components/common/glitch'
-import { Layout } from '@/components/common/layout'
+import { Layout } from '@/components/layout/layout'
 import { Outline } from '@/components/common/outline'
 import { Seo } from '@/components/common/seo'
 import { About } from '@/components/home/about'
@@ -21,8 +22,8 @@ export default function Home () {
   const b = getIntersectionStyles({ translate: 'translate-x-8', destranslate: 'translate-x-0', opacity: '5', intersected })
 
   return <>
-  <Seo title="Home / Neptuno Black Tattoos" image='/person.webp' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis' />
-  <main className='flex-1 flex flex-col align-center px-6 h-max overflow-x-hidden'>
+  <Seo title="Home / Neptuno Black" image='/person.webp' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis' />
+  <main className='flex-1 flex flex-col align-center px-6 h-max max-w-xl overflow-x-hidden max-[630px]:max-w-none'>
     <section className='h-screen w-full flex items-end justify-center flex-col max-[630px]:items-center'>
         <div className={'transition-[opacity,transform] duration-500 ease-out relative flex items-center'}>
           <div className={a + ' transition-all duration-500'}>
@@ -41,6 +42,7 @@ export default function Home () {
         </div>
     </section>
     <About intersected={intersected} />
+    <Footer />
   </main>
   </>
 }
