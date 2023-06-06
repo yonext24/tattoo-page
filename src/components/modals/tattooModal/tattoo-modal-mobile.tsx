@@ -5,12 +5,15 @@ import { useModalLogic } from '@/hooks/useModalLogic'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { useState } from 'react'
 import { CloseModalButton } from './close-modal-button'
+import useUser from '@/hooks/useUser'
+import { Options } from '@/components/options/options'
 
 export default function TattooModalMobile ({ tattoo }: { tattoo: Tattoo }) {
   const { image: { src, height, width }, nombre, estilos } = tattoo
   const [loaded, setLoaded] = useState<boolean>(false)
   const handleLoad = () => { setLoaded(true) }
   const { dispatch } = useModalContext() ?? {}
+  const admin = useUser()
 
   const aspectRatio = `${width / height}`
 
@@ -36,13 +39,21 @@ export default function TattooModalMobile ({ tattoo }: { tattoo: Tattoo }) {
             />
           <div className='bg-white absolute -bottom-1 -left-1 translate-y-full w-[calc(100%+.50rem)] text-black flex gap-x-2 px-2'>
             {
-              estilos.map(el => <span key={el}>{el}</span>)
+              estilos.length > 0
+                ? estilos.map(el => <span key={el}>{el}</span>)
+                : <div className='h-6'></div>
             }
           </div>
         </div>
           <h1 className='title text-3xl text-end capitalize'>{nombre}</h1>
       </Outline>
       <CloseModalButton closeModal={closeModal}/>
+      {
+        Boolean(admin) &&
+        <div className='absolute top-2 left-2 z-20' onClick={e => { e.stopPropagation() }}>
+          <Options id={tattoo.id} />
+        </div>
+      }
     </div>
   </>
 }

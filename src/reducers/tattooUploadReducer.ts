@@ -57,6 +57,7 @@ type ActionTypes =
   | { type: 'setSubmitError', payload: string }
   | { type: 'setSubmitLoading' }
   | { type: 'setSubmitSuccess' }
+  | { type: 'setReset' }
 
 export function tattooUploadReducer (state: StateType, action: ActionTypes) {
   switch (action.type) {
@@ -78,7 +79,6 @@ export function tattooUploadReducer (state: StateType, action: ActionTypes) {
       }
     case 'updateImageDataError':
       return { ...state, tattoo: { ...state.tattoo, error: action.payload } }
-
     case 'updateImageName':
       return { ...state, tattoo: { ...state.tattoo, nombre: action.payload } }
     case 'updateStyles':
@@ -92,6 +92,8 @@ export function tattooUploadReducer (state: StateType, action: ActionTypes) {
       return { ...state, fetch: { error: null, loading: true, success: false } }
     case 'setSubmitSuccess':
       return { ...state, fetch: { loading: false, error: null, success: true } }
+    case 'setReset':
+      return INITIAL_TATTOO_UPLOADER_STATE
 
     default:
       return state

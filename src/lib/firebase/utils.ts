@@ -52,7 +52,6 @@ export const subirImagen = async (file: File, isTattoo: boolean) => {
     : 'designs'
 
   const storageRef = ref(storage, `/${path}/${fileName}`)
-  console.log(storageRef)
   await uploadBytesResumable(storageRef, file)
   const src = await getDownloadURL(storageRef)
 
@@ -140,7 +139,6 @@ export const agregarTatuaje = async ({ nombre, descripcion, estilos, image, dura
     const docRef = await addDoc(tattoosCollection, {
       nombre, descripcion, image, estilos, duracion, lugar, homeVisible, id: 'placeholder'
     })
-    console.log(docRef)
     return docRef
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir el tatuaje a la base de datos.'

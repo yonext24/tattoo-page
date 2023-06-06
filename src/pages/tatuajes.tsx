@@ -25,7 +25,6 @@ const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooMo
   { loading: () => <TattooModalFallback /> })
 
 export default function Tatuajes ({ tattoos, error }: Props) {
-  console.log(tattoos)
   const { intersected } = useFade()
   const { state } = useModalContext() ?? {}
   const { isMobile } = useWindowContext() ?? {}
@@ -57,7 +56,6 @@ Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>
 export async function getServerSideProps () {
   try {
     const tattoos = await waitFunc<Tattoo[]>(getTattoos, 5000, 'No se pudo recuperar los tatuajes')
-    console.log(tattoos)
     return {
       props: {
         tattoos

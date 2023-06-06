@@ -15,6 +15,7 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
     setLoaded(true)
   }
   const aspectRatio = width / height
+  const finalDesc = descripcion !== '' ? descripcion + '.' : descripcion
 
   const { dispatch } = useModalContext() ?? {}
 
@@ -41,13 +42,15 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
       <div className='flex-1 py-4 px-6 relative pl-8 min-w-[278px] max-[770px]:pr-px '>
         <h2 className='text-end title text-5xl mb-3 max-[770px]:text-center max-[665px]:text-4xl capitalize'>{nombre}</h2>
         <div className='max-w-xs ml-auto max-[830px]:pr-px text-center'>
-          <p className='max-w-xs ml-auto inline max-[665px]:text-sm'>{descripcion}.
+          <p className='max-w-xs ml-auto inline max-[665px]:text-sm'>{finalDesc}
             <span className='inline text-gold'> Hecho en {lugar} en una duración de {duracion}</span>
           </p>
         </div>
         <div className='bg-white absolute -bottom-1 left-1 h-[calc(100%+.5rem)] justify-end [&>span]:[writing-mode:vertical-lr] text-black flex flex-col gap-y-2 py-2'>
           {
-            estilos.map(el => <span key={el}>{el}</span>)
+            estilos.length > 0
+              ? estilos.map(el => <span key={el}>{el}</span>)
+              : <div className='w-6'></div>
           }
         </div>
         <div className='absolute bottom-2 right-2'>

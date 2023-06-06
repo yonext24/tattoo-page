@@ -9,7 +9,7 @@ import { ProtectedRoute } from '@/components/layout/protected-route'
 import { useUploadTattoo } from '@/hooks/useUploadTattoo'
 
 export default function TattooUploadPage () {
-  const { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state } = useUploadTattoo()
+  const { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state, fileInputRef } = useUploadTattoo()
   const { tattoo, fetch } = state
   return <>
 
@@ -20,7 +20,7 @@ export default function TattooUploadPage () {
 
       <form onSubmit={submitHandler} className='flex-1 flex flex-col items-center mx-auto relatie'>
 
-        <input onChange={uploadImageHandler} className='hidden' required id='image' name='image' type='file' accept="image/png, image/jpeg" />
+        <input onChange={uploadImageHandler} ref={fileInputRef} className='hidden' required id='image' name='image' type='file' accept="image/png, image/jpeg" />
         <label htmlFor='image'
         className='bg-white py-3 px-8 text-black font-bold text-xl cursor-pointer border-2 rounded-md hover:bg-black hover:text-white transition-colors'>
           {tattoo.image.url === null ? 'Subir Imagen' : 'Cambiar Imágen'}
@@ -37,11 +37,17 @@ export default function TattooUploadPage () {
 
       <div id='loading_screen' className={`absolute top-0 left-0 transition-colors z-20 w-full h-full flex justify-center items-center
       max-[630px]:fixed
-      ${fetch.loading ? 'bg-white/50 pointer-events-auto' : 'bg-transparent pointer-events-none'}`}>
+      ${fetch.loading ? 'bg-white/50 pointer-events-auto' : 'bg-transparent pointer-events-none'}
+      ${fetch.success ? 'bg-green-400/60 pointer-events-auto' : ' bg-transparent pointer-events-none'}
+      ${fetch.error ? 'bg-red-400/70 pointer-events-auto' : 'bg-transparent pointer-events-none'}`}>
         {
-          fetch.loading
-            ? <Spinner className='w-8 h-8' />
-            : null
+          fetch.loading && <Spinner className='w-8 h-8' />
+        }
+        {
+          fetch.success && <span className='text-black text-xl font-bold text-center'>El tatuaje se subió correctamente.</span>
+        }
+        {
+          fetch.error && <span className='text-black text-xl font-bold text-center'>{fetch.error}</span>
         }
       </div>
 

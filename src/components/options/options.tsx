@@ -20,8 +20,8 @@ export function Options ({ id, isDesign = false }: { id: string, isDesign?: bool
 
   return <>
   <div className='relative'>
-    <button onClick={() => { setOpen(true) }} className={`p-2 hover:bg-black/40 ${isDesign ? 'bg-white' : ''} rounded-full group transition-colors`}>
-      <OptionsIcon className="w-7 h-7 text-black group-hover:text-white transition-colors" />
+    <button onClick={(e) => { setOpen(prev => !prev) }} className={`p-2 bg-black/40 ${isDesign ? 'bg-white' : ''} rounded-full group transition-colors`}>
+      <OptionsIcon className="w-7 h-7 text-white transition-colors" />
     </button>
     {
       open && <OptionsBox deleteHandler={deleteHandler} linkHandler={linkHandler} isDesign={isDesign} />

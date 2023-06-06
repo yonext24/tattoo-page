@@ -9,8 +9,6 @@ const USER_POSSIBLE_STATES = {
 export default function useUser () {
   const [admin, setAdmin] = useState<boolean | undefined>(USER_POSSIBLE_STATES.NOT_KNOWN)
 
-  console.log(admin)
-
   const setState = (value: boolean) => {
     setAdmin(value)
   }

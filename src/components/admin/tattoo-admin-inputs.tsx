@@ -1,4 +1,5 @@
 import { type tattooType } from '@/reducers/tattooUploadReducer'
+import React from 'react'
 
 /* eslint-disable no-extra-boolean-cast */
 interface Props {

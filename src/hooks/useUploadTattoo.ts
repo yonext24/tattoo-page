@@ -2,10 +2,24 @@ import { agregarTatuaje, subirImagen } from '@/lib/firebase/utils'
 import { getImageDimensionsFromFile } from '@/lib/getImageDimensions'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { INITIAL_TATTOO_UPLOADER_STATE, tattooUploadReducer } from '@/reducers/tattooUploadReducer'
-import { useReducer } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 
 export function useUploadTattoo () {
   const [state, dispatch] = useReducer(tattooUploadReducer, INITIAL_TATTOO_UPLOADER_STATE)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      dispatch({ type: 'setReset' })
+    }, 2500)
+
+    if (fileInputRef.current != null) {
+      fileInputRef.current.files = null
+    }
+
+    return () => { clearTimeout(id) }
+  }, [state.fetch.error, state.fetch.success])
 
   const uploadImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'uploadImageLoading' })
@@ -29,8 +43,8 @@ export function useUploadTattoo () {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (state?.tattoo?.image?.width === null && state?.tattoo?.image?.height === null) {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       dispatch({ type: 'setSubmitError', payload: 'Error, no se consiguió el ancho o alto de la imágen, recargá la página y intentá denuevo.' })
       return
     }
@@ -83,5 +97,5 @@ export function useUploadTattoo () {
       .catch(() => { dispatch({ type: 'setSubmitError', payload: 'Error al subir el documento a la base de datos' }) })
   }
 
-  return { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state }
+  return { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state, fileInputRef }
 }

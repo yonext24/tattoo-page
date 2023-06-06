@@ -20,8 +20,8 @@ export function TattooCard ({ tattoo }: { tattoo: Tattoo }) {
       <Outline className='relative group overflow-hidden cursor-pointer'>
         <ImageWithLoader
           url={src}
-          width={width}
-          height={height}
+          width={width / 2}
+          height={height / 2}
           sizes='(max-width: 576px) 40vw, (max-width: 630px) 250px, (max-width: 971px) 30vw,'
           handleLoad={handleLoad}
           loaded={loaded}
