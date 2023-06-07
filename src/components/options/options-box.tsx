@@ -14,9 +14,7 @@ export function OptionsBox ({ deleteHandler, linkHandler, isDesign }: Props) {
   }
 
   return <div className="py-2 rounded-lg flex flex-col bg-neutral-800 align-start [&>button]:transition-colors">
-    {
-      !isDesign && <button onClick={handleLinkClick} className="hover:bg-neutral-700 px-2 py-2 flex justify-start">Generar Link de {masterString}</button>
-    }
+    <button onClick={handleLinkClick} className="hover:bg-neutral-700 px-2 py-2 flex justify-start">Generar Link de {masterString}</button>
     <button onClick={deleteHandler} className="hover:bg-neutral-700 px-2 py-2 flex justify-start text-red-600">Borrar {masterString}</button>
   </div>
 }

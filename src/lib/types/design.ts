@@ -1,15 +1,17 @@
 import { type QueryDocumentSnapshot, type SnapshotOptions } from 'firebase/firestore'
 
-export interface Design {
-  id: string
-  image: {
+export interface DesignImage {
+  src: string
+  path: string
+  compressed: {
     src: string
     path: string
-    compressed: {
-      src: string
-      path: string
-    }
   }
+}
+
+export interface Design {
+  id: string
+  image: DesignImage
   nombre: string
   precio: string
 }

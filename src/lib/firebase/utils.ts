@@ -7,7 +7,7 @@ import { auth, storage } from './app'
 import { designsCollection, tattoosCollection } from './collections'
 import { type ImagesData, type Tattoo } from '../types/tattoo'
 import Compressor from 'compressorjs'
-import { type Design } from '../types/design'
+import { type DesignImage, type Design } from '../types/design'
 
 async function checkIfAdmin (): Promise<boolean> {
   return await new Promise((resolve, reject) => {
@@ -115,13 +115,17 @@ export const deleteTattoo = async (id: string, imageData: ImagesData) => {
   }
 }
 
-export const deleteDesign = async (id: string, path: string) => {
+export const deleteDesign = async (id: string, image: DesignImage) => {
   const isAdmin = await checkIfAdmin()
 
   if (!isAdmin) throw new Error('No está permitido.')
-  const reff = ref(storage, path)
+  const originalRef = ref(storage, image.path)
+  const compressedRef = ref(storage, image.compressed.path)
+
   try {
-    await deleteObject(reff)
+    await deleteObject(originalRef)
+    await deleteObject(compressedRef)
+
     await deleteDoc(doc(designsCollection, id))
   } catch (err) {
     console.error(err)
@@ -173,6 +177,17 @@ export const getDesigns = async () => {
         const data = doc.data()
         return { ...data }
       })
+    })
+}
+export const getSingleDesign = async (id: string) => {
+  const docRef = doc(designsCollection, id)
+  return await getDoc(docRef)
+    .then(doc => {
+      if (!doc.exists()) {
+        throw new Error('No se encontró el tatuaje.')
+      }
+      const data = doc.data()
+      return { ...data }
     })
 }
 

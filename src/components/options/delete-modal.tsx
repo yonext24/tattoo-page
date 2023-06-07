@@ -14,7 +14,7 @@ export function DeleteModal ({ close, isDesign }: Props) {
     if (isDesign) {
       const design = state?.design
       if (design === undefined || design === null) return
-      await deleteDesign(design.id, design.path)
+      await deleteDesign(design.id, design.image)
     } else {
       const tattoo = state?.tattoo
       if (tattoo === undefined || tattoo === null) return
