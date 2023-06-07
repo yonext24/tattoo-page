@@ -6,9 +6,11 @@ interface Props {
   title: string
   image?: string
   description?: string
+  height?: string
+  width?: string
 }
 
-export function Seo ({ title, image, description }: Props) {
+export function Seo ({ title, image, description, width, height }: Props) {
   const { asPath } = useRouter()
 
   return (
@@ -29,8 +31,16 @@ export function Seo ({ title, image, description }: Props) {
       {
         image !== undefined && <>
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property='og:image' content={image} />
-        <meta property="twitter:image" content={image} />
+        <meta property='og:image' content={`${image}`} />
+        <meta property="twitter:image" content={`${image}`} />
+        {
+          width !== undefined && height !== undefined && <>
+
+            <meta property="og:image:width" content={width} />
+            <meta property="og:image:height" content={height} />
+
+          </>
+        }
       </>
       }
       <meta

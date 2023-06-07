@@ -9,6 +9,7 @@ import { useFade } from '@/hooks/useFade'
 import { getIntersectionStyles } from '@/lib/getIntersectionStyles'
 import Image from 'next/image'
 import { type ReactNode } from 'react'
+import { siteURL } from '@/lib/env'
 
 const medias = [
   { name: 'Instagram', url: 'instagram.com' },
@@ -22,7 +23,14 @@ export default function Home () {
   const b = getIntersectionStyles({ translate: 'translate-x-8', destranslate: 'translate-x-0', opacity: '5', intersected })
 
   return <>
-  <Seo title="Home / Neptuno Black" image='/person.webp' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis' />
+  <Seo
+    title="Home / Neptuno Black"
+    image={`${siteURL}person.webp`}
+    width='800'
+    height='1200'
+    description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis'
+  />
+
   <main className='flex-1 flex flex-col align-center px-6 h-max max-w-xl overflow-x-hidden max-[630px]:max-w-none'>
     <section className='h-screen w-full flex items-end justify-center flex-col max-[630px]:items-center'>
         <div className={'transition-[opacity,transform] duration-500 ease-out relative flex items-center'}>

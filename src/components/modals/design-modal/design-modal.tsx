@@ -17,9 +17,7 @@ export default function DesignModal ({ closeModal, design }: DesignModalProps) {
   const admin = useUser()
 
   const handleLoad = () => {
-    setTimeout(() => {
-      setLoaded(true)
-    }, 5000)
+    setLoaded(true)
   }
 
   return (
