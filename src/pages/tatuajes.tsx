@@ -13,6 +13,7 @@ import { waitFunc } from '@/lib/waitFunc'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
 import { type Tattoo } from '@/lib/types/tattoo'
+import { siteURL } from '@/lib/env'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -30,7 +31,11 @@ export default function Tatuajes ({ tattoos, error }: Props) {
   const { isMobile } = useWindowContext() ?? {}
 
   return <>
-    <Seo title='Tattooos / Neptuno Black' description='Página de tatuajes de Neptuno Black.' image='/logo.webp' />
+    <Seo title='Tatuajes / Neptuno Black'
+      description='Página de Tatuajes de Neptuno Black, Alan Hernandez.'
+      image={`${siteURL}logo.webp`}
+      imageType='image/webp'
+    />
     <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none' >
       <PageHeading text='Tatuajes' intersected={intersected} />
       {

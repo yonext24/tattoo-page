@@ -26,8 +26,9 @@ export default function Home () {
   <Seo
     title="Home / Neptuno Black"
     image={`${siteURL}person.webp`}
-    width='800'
+    width='630'
     height='1200'
+    imageType='image/webp'
     description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis'
   />
 

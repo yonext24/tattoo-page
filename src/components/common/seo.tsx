@@ -8,9 +8,10 @@ interface Props {
   description?: string
   height?: string
   width?: string
+  imageType?: string
 }
 
-export function Seo ({ title, image, description, width, height }: Props) {
+export function Seo ({ title, image, description, width, height, imageType }: Props) {
   const { asPath } = useRouter()
 
   return (
@@ -19,10 +20,11 @@ export function Seo ({ title, image, description, width, height }: Props) {
       <meta name='og:title' content={title} />
       <meta property="twitter:title" content={title} />
       <meta property="og:type" content="website" />
+      <meta name="theme-color" content="#000000" />
 
       <link rel="icon" href="/favicon.ico" />
       {
-        description !== undefined && <>
+        description !== undefined && description !== '' && <>
         <meta name='description' content={description} />
         <meta name='og:description' content={description} />
         <meta property="twitter:description" content={description} />
@@ -30,12 +32,12 @@ export function Seo ({ title, image, description, width, height }: Props) {
       }
       {
         image !== undefined && <>
+        <meta property="og:image:type" content={imageType} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property='og:image' content={`${image}`} />
         <meta property="twitter:image" content={`${image}`} />
         {
           width !== undefined && height !== undefined && <>
-
             <meta property="og:image:width" content={width} />
             <meta property="og:image:height" content={height} />
 

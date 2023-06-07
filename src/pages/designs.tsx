@@ -11,6 +11,7 @@ import { type Design } from '@/lib/types/design'
 import { waitFunc } from '@/lib/waitFunc'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
+import { siteURL } from '@/lib/env'
 
 interface PageProps {
   error?: string
@@ -28,7 +29,11 @@ export default function Designs ({ error, designs }: PageProps) {
   const closeModal = () => { dispatch?.({ type: 'closeModal' }) }
 
   return <>
-    <Seo title='Designs / Neptuno Black Tattoos' />
+    <Seo title='Diseños / Neptuno Black'
+      description='Página de diseños de Neptuno Black, Alan Hernandez.'
+      image={`${siteURL}logo.webp`}
+      imageType='image/webp'
+    />
     <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none'>
       {
         Boolean(error) && <span>{error}</span>
