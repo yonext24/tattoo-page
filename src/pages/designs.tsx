@@ -31,7 +31,7 @@ export default function Designs ({ error, designs }: PageProps) {
   return <>
     <Seo title='Diseños / Neptuno Black'
       description='Página de diseños de Neptuno Black, Alan Hernandez.'
-      image={`${siteURL}logo.webp`}
+      image={`${siteURL}/logo.webp`}
       imageType='image/webp'
     />
     <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none'>

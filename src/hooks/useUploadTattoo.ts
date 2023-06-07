@@ -66,10 +66,13 @@ export function useUploadTattoo () {
     const homeVisible = formData.get('homeVisible') !== null
 
     let src: string, path: string
+    let compressedSrc: string, compressedPath: string
     try {
-      const res = await subirImagen(image as File, true)
-      src = res.src
-      path = res.path
+      const { original, compressed } = await subirImagen(image as File, true)
+      src = original.src
+      path = original.path
+      compressedSrc = compressed.src
+      compressedPath = compressed.path
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir la imágen'
       dispatch({ type: 'setSubmitError', payload: errorMessage })
@@ -88,7 +91,11 @@ export function useUploadTattoo () {
         width: width as number,
         height: height as number,
         path,
-        src
+        src,
+        compressed: {
+          src: compressedSrc,
+          path: compressedPath
+        }
       }
     }
 

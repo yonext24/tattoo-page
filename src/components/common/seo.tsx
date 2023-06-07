@@ -21,6 +21,7 @@ export function Seo ({ title, image, description, width, height, imageType }: Pr
       <meta property="twitter:title" content={title} />
       <meta property="og:type" content="website" />
       <meta name="theme-color" content="#000000" />
+      <meta name="og:site_name" content="Neptuno Black Tattoos" />
 
       <link rel="icon" href="/favicon.ico" />
       {

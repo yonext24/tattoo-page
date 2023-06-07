@@ -16,7 +16,7 @@ export function Options ({ id, isDesign = false }: { id: string, isDesign?: bool
     setIsDeleting(false)
   }
   const linkHandler = async () => {
-    await navigator.clipboard.writeText(`${siteURL}busqueda?tattoo=${id}`).then(() => { setOpen(false) })
+    await navigator.clipboard.writeText(`${siteURL}/busqueda?tattoo=${id}`).then(() => { setOpen(false) })
   }
 
   return <>

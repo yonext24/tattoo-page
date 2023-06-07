@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 // Import the functions you need from the SDKs you need
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { addDoc, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
@@ -5,6 +6,7 @@ import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } f
 import { auth, storage } from './app'
 import { designsCollection, tattoosCollection } from './collections'
 import { type ImagesData, type Tattoo } from '../types/tattoo'
+import Compressor from 'compressorjs'
 
 async function checkIfAdmin (): Promise<boolean> {
   return await new Promise((resolve, reject) => {
@@ -51,20 +53,59 @@ export const subirImagen = async (file: File, isTattoo: boolean) => {
     ? 'tattoos'
     : 'designs'
 
-  const storageRef = ref(storage, `/${path}/${fileName}`)
-  await uploadBytesResumable(storageRef, file)
-  const src = await getDownloadURL(storageRef)
+  let compressedImage: File | Blob
+  try {
+    compressedImage = await new Promise((resolve, reject) => {
+      new Compressor(file, {
+        quality: 0.8,
+        height: 630,
+        width: 1200,
+        resize: 'contain',
 
-  return { src, path: storageRef.fullPath }
+        beforeDraw (context, canvas) {
+          context.fillStyle = '#000'
+          context.fillRect(0, 0, canvas.width, canvas.height)
+        },
+
+        success (result) {
+          resolve(result)
+        },
+
+        error (err) {
+          reject(err)
+        }
+
+      })
+    })
+  } catch (err) {
+    const errorMessage = 'Hubo un error al comprimir la imágen, intentálo denuevo'
+    throw new Error(errorMessage)
+  }
+
+  const compressedRef = ref(storage, `/${path}/compressed/${fileName}`)
+  const originalRef = ref(storage, `/${path}/${fileName}`)
+
+  try {
+    await Promise.all([uploadBytesResumable(originalRef, file), uploadBytesResumable(compressedRef, compressedImage)])
+
+    const [originalSrc, compressedSrc] = await Promise.all([getDownloadURL(originalRef), getDownloadURL(compressedRef)])
+    return { original: { src: originalSrc, path: originalRef.fullPath }, compressed: { src: compressedSrc, path: compressedRef.fullPath } }
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir las imágenes, recargá y intentalo denuevo.'
+    throw new Error(errorMessage)
+  }
 }
 
 export const deleteTattoo = async (id: string, imageData: ImagesData) => {
   const isAdmin = await checkIfAdmin()
 
   if (!isAdmin) throw new Error('No está permitido.')
-  const reff = ref(storage, imageData.path)
 
-  await deleteObject(reff)
+  const compressedRef = ref(storage, imageData.compressed.path)
+  const originalRef = ref(storage, imageData.path)
+
+  await deleteObject(originalRef)
+  await deleteObject(compressedRef)
 
   try {
     await deleteDoc(doc(tattoosCollection, id))

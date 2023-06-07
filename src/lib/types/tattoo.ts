@@ -5,6 +5,10 @@ export interface ImagesData {
   width: number
   height: number
   path: string
+  compressed: {
+    path: string
+    src: string
+  }
 }
 
 export interface Tattoo {

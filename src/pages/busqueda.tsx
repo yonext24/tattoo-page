@@ -42,15 +42,15 @@ export default function Busqueda ({ tattoos: serverTattoos, error: serverError, 
       singleTattoo !== undefined
         ? <Seo
           title={`${singleTattoo.nombre.charAt(0).toUpperCase()}${singleTattoo.nombre.slice(1)}` + ' / Neptuno Black'}
-          image={singleTattoo.image.src}
+          image={`${singleTattoo.image.compressed.src}?`}
           description={singleTattoo.descripcion}
           width={String(1200)}
           height={String(630)}
-          imageType={`image/${singleTattoo.image.path.split('.')[1]}`}
+          imageType={`image/${singleTattoo.image.compressed.path.split('.')[1]}`}
         />
         : <Seo title='Búsqueda / Neptuno Black'
             description='Página de búsqueda de tatuajes de Neptuno Black.'
-            image={`${siteURL}logo.webp`}
+            image={`${siteURL}/logo.webp`}
             imageType='image/webp'
           />
     }

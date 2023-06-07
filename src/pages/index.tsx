@@ -25,7 +25,7 @@ export default function Home () {
   return <>
   <Seo
     title="Home / Neptuno Black"
-    image={`${siteURL}person.webp`}
+    image={`${siteURL}/person.webp`}
     width='630'
     height='1200'
     imageType='image/webp'
