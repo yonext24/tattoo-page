@@ -1,27 +1,21 @@
-import { type Design as DesignType } from '@/lib/types/design'
 import { useState } from 'react'
 import { ImageWithLoader } from '../common/image-with-loader'
-import { DesignFooter } from './design-footer'
-import { useModalContext } from '@/hooks/useModalContext'
+import { DesignFooter } from '../design/design-footer'
 
 interface Props {
-  design: DesignType
+  precio: string
+  src: string
 }
 
-export function DesignCard ({ design }: Props) {
-  const { image, precio } = design
+export function DesignAdminCard ({ precio, src }: Props) {
   const [loaded, setLoaded] = useState<boolean>(false)
   const handleLoad = () => {
     setLoaded(true)
   }
-  const { dispatch } = useModalContext() ?? {}
-  const handleClick = () => {
-    dispatch?.({ type: 'openDesign', payload: design })
-  }
 
-  return <article onClick={handleClick} className='rounded-md cursor-pointer group overflow-hidden relative'>
+  return <article className='rounded-md cursor-pointer group overflow-hidden relative'>
     <ImageWithLoader
-      url={image.src}
+      url={src}
       width={400}
       height={450}
       handleLoad={handleLoad}

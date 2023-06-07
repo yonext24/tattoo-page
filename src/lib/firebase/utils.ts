@@ -7,6 +7,7 @@ import { auth, storage } from './app'
 import { designsCollection, tattoosCollection } from './collections'
 import { type ImagesData, type Tattoo } from '../types/tattoo'
 import Compressor from 'compressorjs'
+import { type Design } from '../types/design'
 
 async function checkIfAdmin (): Promise<boolean> {
   return await new Promise((resolve, reject) => {
@@ -179,6 +180,18 @@ export const agregarTatuaje = async ({ nombre, descripcion, estilos, image, dura
   try {
     const docRef = await addDoc(tattoosCollection, {
       nombre, descripcion, image, estilos, duracion, lugar, homeVisible, id: 'placeholder'
+    })
+    return docRef
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir el tatuaje a la base de datos.'
+    throw new Error(errorMessage)
+  }
+}
+
+export const agregarDiseño = async ({ nombre, precio, image }: Design) => {
+  try {
+    const docRef = await addDoc(designsCollection, {
+      nombre, precio, image, id: 'placeholder'
     })
     return docRef
   } catch (err) {

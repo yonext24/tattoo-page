@@ -2,18 +2,22 @@ import { type QueryDocumentSnapshot, type SnapshotOptions } from 'firebase/fires
 
 export interface Design {
   id: string
-  descripcion: string
-  estilos: string[]
-  imageUrl: string
+  image: {
+    src: string
+    path: string
+    compressed: {
+      src: string
+      path: string
+    }
+  }
   nombre: string
-  path: string
   precio: string
-  tags: string[]
 }
 
 export const designsConverter = {
   toFirestore (design: Design) {
-    return { ...design }
+    const { id, ...data } = design
+    return { ...data }
   },
   fromFirestore (
     snapshot: QueryDocumentSnapshot,

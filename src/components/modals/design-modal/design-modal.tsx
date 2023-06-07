@@ -11,7 +11,7 @@ export interface DesignModalProps {
 }
 
 export default function DesignModal ({ closeModal, design }: DesignModalProps) {
-  const { imageUrl } = design
+  const { image: { src } } = design
   const [loaded, setLoaded] = useState<boolean>(false)
   useModalLogic({ closeModal })
   const admin = useUser()
@@ -24,7 +24,7 @@ export default function DesignModal ({ closeModal, design }: DesignModalProps) {
     <div id='modal-background' className='fixed z-10 top-0 left-0 w-full h-full bg-black/80 supports-[backdrop-blur]:bg-black/95 backdrop-blur-sm flex items-center justify-center overflow-auto' onClick={closeModal}>
       <div className='relative h-[90%] w-max'>
         <ImageWithLoader
-            url={imageUrl}
+            url={src}
             width={1000}
             height={800}
             loaded={loaded}
