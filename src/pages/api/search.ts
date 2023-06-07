@@ -17,7 +17,6 @@ export default async function handler (
   if (typeof req.query?.search !== 'string') { res.status(400).json({ error: 'Se necesita una búsqueda' }); return }
 
   const search = req.query.search
-  if (search.includes('ñ')) { res.status(405).json({ error: 'testing' }); return }
 
   try {
     const tattoos = await waitFunc(async () => await searchTatttoos({ search }), 5000, 'No se pudo obtener los tatuajes')
