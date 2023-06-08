@@ -3,6 +3,7 @@ import { NavEntry } from './nav-entry'
 import useUser from '@/hooks/useUser'
 import { cerrarSesion } from '@/lib/firebase/utils'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 export default function Navbar () {
   const admin = useUser()
@@ -17,7 +18,9 @@ export default function Navbar () {
     </div>
     <nav className='w-[40vw] max-[800px]:w-[35vw] h-screen fixed top-0 left-0 flex flex-col'>
       <div className="absolute top-5 left-1/2 -translate-x-1/2 w-full">
-        <h2 className={'text-center text-[2rem] title'}>Neptuno Black Tattoos</h2>
+        <Link href='/'>
+          <h2 className={'text-center text-[2rem] title'}>Neptuno Black Tatuajes</h2>
+        </Link>
       </div>
       <ul className='text-2xl tracking-widest flex flex-col gap-y-1 m-auto [&>li]:cursor-pointer'>
         {

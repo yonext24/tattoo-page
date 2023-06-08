@@ -21,7 +21,8 @@ export function DesignCard ({ design }: Props) {
 
   return <article onClick={handleClick} className='rounded-md cursor-pointer group overflow-hidden relative'>
     <ImageWithLoader
-      url={image.src}
+      src={image.src}
+      alt={design.nombre}
       width={400}
       height={450}
       handleLoad={handleLoad}

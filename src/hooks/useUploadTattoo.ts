@@ -12,7 +12,7 @@ export function useUploadTattoo () {
   useEffect(() => {
     const id = setTimeout(() => {
       dispatch({ type: 'setReset' })
-    }, 100000)
+    }, 2500)
 
     if (fileInputRef.current != null) {
       fileInputRef.current.files = null

@@ -1,4 +1,4 @@
-import { Footer } from '@/components/common/footer'
+import { Footer } from '@/components/footer/footer'
 import { Layout } from '@/components/layout/layout'
 import { Seo } from '@/components/common/seo'
 import { DesignSection } from '@/components/design/design-section'

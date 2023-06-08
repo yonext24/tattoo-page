@@ -18,7 +18,8 @@ export function TattooAdminCard ({ url, width, height, nombre }: Props) {
     <article>
       <Outline className='relative group overflow-hidden cursor-pointer'>
         <ImageWithLoader
-          url={url}
+          src={url}
+          alt='preview card'
           width={width}
           height={height}
           sizes='(max-width: 576px) 40vw, (max-width: 630px) 250px, (max-width: 971px) 30vw,'

@@ -29,7 +29,8 @@ const TattooModal: React.FC<TattooModalProps> = ({ tattoo }) => {
     max-[790px]:w-full max-[730px]:h-[82%]'>
       <div className={'relative imageAspect'} style={{ aspectRatio }}>
         <ImageWithLoader
-          url={src}
+          src={src}
+          alt={nombre}
           width={width / 2}
           height={height / 2}
           loaded={loaded}

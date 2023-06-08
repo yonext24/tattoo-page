@@ -28,7 +28,8 @@ export default function TattooModalMobile ({ tattoo }: { tattoo: Tattoo }) {
       <Outline className='max-h-[93vh] mt-0 flex flex-col gap-y-7' onClick={e => { e.stopPropagation() }}>
         <div className='relative max-h-[calc(93vh-36px-2.5rem)]' style={{ aspectRatio }}>
           <ImageWithLoader
-            url={src}
+            src={src}
+            alt={nombre}
             width={width / 2}
             height={height / 2}
             loaded={loaded}

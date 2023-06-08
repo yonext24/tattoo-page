@@ -1,26 +1,17 @@
-import Image from 'next/image'
+import Image, { type ImageProps } from 'next/image'
 import { Spinner } from './spinner'
 
-interface Props {
-  loaded: boolean
-  handleLoad: () => void
-  url: string
-  width: number
-  height: number
-  sizes?: string
+interface Props extends ImageProps {
   imageClassname?: string
   loaderClassname?: string
+  handleLoad: () => void
+  loaded: boolean
 }
 
-export function ImageWithLoader ({ loaded, handleLoad, url, width, height, imageClassname, loaderClassname, sizes }: Props) {
+export function ImageWithLoader ({ loaded, handleLoad, imageClassname, loaderClassname, ...imageProps }: Props) {
   return <>
     <Image
-      src={url}
-      alt='image'
-      width={width}
-      height={height}
-      sizes={sizes}
-      loading='lazy'
+      {...imageProps}
       style={{ opacity: !loaded ? '0' : '100' }}
       onLoadingComplete={handleLoad}
       className={imageClassname}

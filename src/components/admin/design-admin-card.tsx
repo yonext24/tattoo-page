@@ -15,7 +15,8 @@ export function DesignAdminCard ({ precio, src }: Props) {
 
   return <article className='rounded-md cursor-pointer group overflow-hidden relative'>
     <ImageWithLoader
-      url={src}
+      src={src}
+      alt='preview image'
       width={400}
       height={450}
       handleLoad={handleLoad}

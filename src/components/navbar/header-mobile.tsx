@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavButtonMobile } from './nav-button-mobile'
 import { NavbarMobile } from './navbar-mobile'
+import Link from 'next/link'
 
 export default function HeaderMobile () {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false)
@@ -12,7 +13,9 @@ export default function HeaderMobile () {
 
       <NavButtonMobile handleOpen={() => { setIsNavOpen(true) }} />
 
-      <h1 className='title text-end text-2xl'>Neptuno Black Tattoos</h1>
+      <Link href='/'>
+        <h2 className='title text-end text-2xl'>Neptuno Black <span className='font-[inherit] max-[345px]:hidden'>Tatuajes</span></h2>
+      </Link>
 
     </div>
     {

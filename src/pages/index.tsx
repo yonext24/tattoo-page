@@ -1,4 +1,4 @@
-import { Footer } from '@/components/common/footer'
+import { Footer } from '@/components/footer/footer'
 import { Glitch } from '@/components/common/glitch'
 import { Layout } from '@/components/layout/layout'
 import { Outline } from '@/components/common/outline'
