@@ -1,10 +1,10 @@
-import { fetchSearch } from '@/lib/fetchSearch'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { INITIAL_STATE, searchReducer } from '@/reducers/searchReducer'
 
 import debounce from 'just-debounce-it'
 import { useState, useEffect, useCallback, useReducer, useRef } from 'react'
 import { useModalContext } from './useModalContext'
+import { fetchSearch } from '@/lib/consts'
 
 interface Props {
   tattoos: Tattoo[] | undefined

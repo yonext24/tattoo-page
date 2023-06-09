@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { waitFunc } from '@/lib/consts'
 import { searchTatttoos } from '@/lib/firebase/utils'
 import { type Tattoo } from '@/lib/types/tattoo'
-import { waitFunc } from '@/lib/waitFunc'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 interface Data {

@@ -10,6 +10,7 @@ import { getIntersectionStyles } from '@/lib/getIntersectionStyles'
 import Image from 'next/image'
 import { type ReactNode } from 'react'
 import { siteURL } from '@/lib/env'
+import { defaultDesc } from '@/lib/consts'
 
 const medias = [
   { name: 'Instagram', url: 'instagram.com' },
@@ -24,12 +25,12 @@ export default function Home () {
 
   return <>
   <Seo
-    title="Home / Neptuno Black"
+    title="Neptuno Black Tatuajes Lanús"
     image={`${siteURL}/person.webp`}
     width='630'
     height='1200'
     imageType='image/webp'
-    description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis perspiciatis, quis maxime cum ducimus illum officiis'
+    description={`Alan Hernandez, plasmando arte en la piel desde 2018. ${defaultDesc}`}
   />
 
   <main className='flex-1 flex flex-col align-center px-6 h-max max-w-xl overflow-x-hidden max-[630px]:max-w-none'>
@@ -51,7 +52,12 @@ export default function Home () {
         </div>
     </section>
     <About intersected={intersected} />
+    <a className='text-xs group text-end text-neutral-500 -mb-5' href='https://yonathan-portfolio.netlify.app/' target='_blank' rel='noopener noreferrer'>
+      Page made by
+      <span className='group-hover:underline'> Jonathan Picone</span>
+    </a>
     <Footer />
+
   </main>
   </>
 }

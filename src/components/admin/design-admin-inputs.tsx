@@ -21,7 +21,7 @@ export function DesignAdminInputs ({ design, fetch, precioHandler }: Props) {
       [&>input[type=text]]:rounded-md">
 
       <input type='text' name='nombre' max={10} placeholder="Nombre..." className='min-[700px]:col-span-full' />
-      <input type='text' name='precio' max={20} onChange={precioHandler} required placeholder="Precio..." className='min-[700px]:col-span-full' />
+      <input type='text' name='precio' max={20} onChange={precioHandler} placeholder="Precio..." className='min-[700px]:col-span-full' />
       <div className='flex gap-x-2 h-10 items-start'>
       </div>
     </div>

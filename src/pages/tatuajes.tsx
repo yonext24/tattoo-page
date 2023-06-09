@@ -9,11 +9,11 @@ import { useModalContext } from '@/hooks/useModalContext'
 import { useWindowContext } from '@/hooks/useWindowContext'
 import { getTattoos } from '@/lib/firebase/utils'
 import { type TattooModalProps } from '@/lib/types/tattooModal'
-import { waitFunc } from '@/lib/waitFunc'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { siteURL } from '@/lib/env'
+import { defaultDesc, waitFunc } from '@/lib/consts'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -31,8 +31,8 @@ export default function Tatuajes ({ tattoos, error }: Props) {
   const { isMobile } = useWindowContext() ?? {}
 
   return <>
-    <Seo title='Tatuajes / Neptuno Black'
-      description='Página de Tatuajes de Neptuno Black, Alan Hernandez.'
+    <Seo title='Tatuajes / Neptuno Black Tatuajes'
+      description={'Página de los tatuajes realizados por Alan Hernandez.' + defaultDesc}
       image={`${siteURL}/logo.webp`}
       imageType='image/webp'
     />

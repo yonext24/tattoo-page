@@ -1,4 +1,3 @@
-import { navEntrys } from '@/lib/navEntrys'
 import { useEffect, useState } from 'react'
 import { NavEntryMobile } from './nav-entry-mobile'
 import { useRouter } from 'next/router'
@@ -6,6 +5,7 @@ import CloseIcon from '../icons/close-icon'
 import useUser from '@/hooks/useUser'
 import { cerrarSesion } from '@/lib/firebase/utils'
 import { Glitch } from '../common/glitch'
+import { navEntrys } from '@/lib/consts'
 
 interface Props {
   closeModal: () => void

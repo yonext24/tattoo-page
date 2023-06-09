@@ -8,11 +8,11 @@ import { useFade } from '@/hooks/useFade'
 import { useModalContext } from '@/hooks/useModalContext'
 import { getDesigns, getSingleDesign } from '@/lib/firebase/utils'
 import { type Design } from '@/lib/types/design'
-import { waitFunc } from '@/lib/waitFunc'
 import dynamic from 'next/dynamic'
 import { useEffect, type ReactNode } from 'react'
 import { siteURL } from '@/lib/env'
 import { type GetServerSidePropsContext } from 'next'
+import { defaultDesc, waitFunc } from '@/lib/consts'
 
 interface PageProps {
   error?: string
@@ -36,6 +36,10 @@ export default function Designs ({ error, designs, singleDesign }: PageProps) {
 
   const closeModal = () => { dispatch?.({ type: 'closeModal' }) }
 
+  const descripcion = singleDesign !== false && Boolean(singleDesign.nombre)
+    ? `Diseño de ${singleDesign.nombre}, hecho por Alan Hernandez | Neptuno Black Tatuajes`
+    : 'Página de búsqueda de diseños disponibles o a la venta de Neptuno Black, Alan Hernandez, actualmente trabajando en Guadalupe Art Studios.'
+
   return <>
     {
       singleDesign !== false
@@ -44,10 +48,11 @@ export default function Designs ({ error, designs, singleDesign }: PageProps) {
           image={`${singleDesign.image.compressed.src}?`}
           width={String(1200)}
           height={String(630)}
+          description={descripcion + defaultDesc}
           imageType={`image/${singleDesign.image.compressed.path.split('.')[1]}`}
         />
         : <Seo title='Diseños / Neptuno Black'
-            description='Página de diseños de Neptuno Black, Alan Hernandez.'
+            description={descripcion + defaultDesc}
             image={`${siteURL}/logo.webp`}
             imageType='image/webp'
           />

@@ -7,7 +7,7 @@ import { PageHeading } from '../common/page-heading'
 export function DesignSection ({ designs, intersected }: { designs: DesignType[], intersected: boolean }) {
   const b = getIntersectionStyles({ translate: 'translate-x-[10%]', destranslate: 'translate-x-0', opacity: '0', intersected })
 
-  return <section className='max-w-xl overflow-x-hidden ml-auto'>
+  return <section className='max-w-xl overflow-x-hidden ml-auto max-[630px]:mx-auto'>
     <PageHeading text='Diseños' intersected={intersected} />
     <Masonry
       breakpointCols={2}

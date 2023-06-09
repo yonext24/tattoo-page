@@ -12,11 +12,11 @@ import { useWindowContext } from '@/hooks/useWindowContext'
 import { getSingleTattoo, searchTatttoos } from '@/lib/firebase/utils'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { type TattooModalProps } from '@/lib/types/tattooModal'
-import { waitFunc } from '@/lib/waitFunc'
 import { type GetServerSidePropsContext } from 'next'
 import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
 import { siteURL } from '@/lib/env'
+import { defaultDesc, waitFunc } from '@/lib/consts'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -37,19 +37,25 @@ export default function Busqueda ({ tattoos: serverTattoos, error: serverError, 
   const { onChange, value, state: tattoosState } = useSearch({ tattoos: serverTattoos, query, singleTattoo, serverError })
   const { loading, error, tattoos } = tattoosState
 
+  const descripcion = singleTattoo === undefined
+    ? 'Página de búsqueda de tatuajes de Neptuno Black, Alan Hernandez.'
+    : singleTattoo.descripcion === ''
+      ? `${singleTattoo.nombre}, hecho en ${singleTattoo.lugar} en una duración de ${singleTattoo.duracion} | Neptuno Black Tatuajes`
+      : `${singleTattoo.descripcion}, hecho en ${singleTattoo.lugar} en una duración de ${singleTattoo.duracion} | Neptuno Black Tatuajes`
+
   return <>
     {
       singleTattoo !== undefined
         ? <Seo
-          title={`${singleTattoo.nombre.charAt(0).toUpperCase()}${singleTattoo.nombre.slice(1)}` + ' / Neptuno Black'}
+          title={`${singleTattoo.nombre.charAt(0).toUpperCase()}${singleTattoo.nombre.slice(1)} en ${singleTattoo.lugar}` + ' / Neptuno Black Tatuajes'}
           image={`${singleTattoo.image.compressed.src}?`}
-          description={singleTattoo.descripcion}
+          description={descripcion + defaultDesc}
           width={String(1200)}
           height={String(630)}
           imageType={`image/${singleTattoo.image.compressed.path.split('.')[1]}`}
         />
         : <Seo title='Búsqueda / Neptuno Black'
-            description='Página de búsqueda de tatuajes de Neptuno Black.'
+            description={descripcion + defaultDesc}
             image={`${siteURL}/logo.webp`}
             imageType='image/webp'
           />

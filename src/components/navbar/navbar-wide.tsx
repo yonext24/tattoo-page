@@ -1,9 +1,9 @@
-import { navEntrys } from '@/lib/navEntrys'
 import { NavEntry } from './nav-entry'
 import useUser from '@/hooks/useUser'
 import { cerrarSesion } from '@/lib/firebase/utils'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { navEntrys } from '@/lib/consts'
 
 export default function Navbar () {
   const admin = useUser()
