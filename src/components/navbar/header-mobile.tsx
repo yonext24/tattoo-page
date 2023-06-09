@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { NavButtonMobile } from './nav-button-mobile'
-import { NavbarMobile } from './navbar-mobile'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { TattooModalFallback } from '../fallbacks/tattoo-modal-fallback'
+import { type NavMobileProps } from './navbar-mobile'
+
+const NavbarMobile = dynamic(async (): Promise<React.ComponentType<NavMobileProps>> => await import('./navbar-mobile').then(module => module.default),
+  { loading: () => <TattooModalFallback />, ssr: false })
 
 export default function HeaderMobile () {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false)

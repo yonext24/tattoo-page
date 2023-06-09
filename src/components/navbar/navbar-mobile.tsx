@@ -7,11 +7,11 @@ import { cerrarSesion } from '@/lib/firebase/utils'
 import { Glitch } from '../common/glitch'
 import { navEntrys } from '@/lib/consts'
 
-interface Props {
+export interface NavMobileProps {
   closeModal: () => void
 }
 
-export function NavbarMobile ({ closeModal }: Props) {
+export default function NavbarMobile ({ closeModal }: NavMobileProps) {
   const [isAnimating, setIsAnimating] = useState<boolean>(true)
 
   const admin = useUser()
@@ -28,7 +28,7 @@ export function NavbarMobile ({ closeModal }: Props) {
 
   return <div id='modalBackground' className='fixed top-0 left-0 w-screen h-screen bg-black/70 backdrop-blur-md flex'>
     <div className='absolute top-0 left-0 flex p-4 justify-between w-full'>
-      <button onClick={closeModal}>
+      <button name='Cerrar ventana' aria-label='Cerrar ventana' onClick={closeModal}>
         <CloseIcon className='h-8 w-8' />
       </button>
       <h3 className='title text-xl'>Neptuno Black Tattoos</h3>

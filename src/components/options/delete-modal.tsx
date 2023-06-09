@@ -29,8 +29,8 @@ export function DeleteModal ({ close, isDesign }: Props) {
     <div className="bg-neutral-900 flex flex-col gap-y-4 p-4 rounded-lg">
       <h3 className='text-xl font-bold'>Querés borrar este {isDesign ? 'diseño' : 'tatuaje'}?</h3>
       <div className="flex [&>button]:p-2 [&>button]:flex-1 [&>button:nth-of-type(1)]:bg-red-500 [&>button]:rounded-sm">
-        <button onClick={() => { void onDelete() }}>Borrar</button>
-        <button>Cancelar</button>
+        <button name='Borrar' onClick={() => { void onDelete() }}>Borrar</button>
+        <button name='Cancelar'>Cancelar</button>
       </div>
     </div>
   </div>

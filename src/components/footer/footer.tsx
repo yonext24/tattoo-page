@@ -3,8 +3,8 @@ import InstagramIcon from '../icons/instagram-icon'
 import WhatsappIcon from '../icons/whatsapp-icon'
 
 const redes = [
-  { name: 'Instagram', href: 'https://www.instagram.com/alannn.tattoo/', icon: InstagramIcon },
-  { name: 'Whatsapp', href: '', icon: WhatsappIcon }
+  { name: 'Instagram', href: 'https://www.instagram.com/alannn.tattoo/', icon: InstagramIcon, htmlName: 'Abrir instagram' },
+  { name: 'Whatsapp', href: 'https://wa.link/iafyq7', icon: WhatsappIcon, htmlName: 'Abrir whatsapp' }
 ]
 
 export function Footer () {
@@ -22,7 +22,7 @@ export function Footer () {
         </div>
         <div className="flex justify-end gap-x-2 items-center">
           {
-            redes.map(el => <a href={el.href} key={el.name} target='_blank' rel="noopener noreferrer" className='group'>
+            redes.map(el => <a href={el.href} aria-label={el.htmlName} key={el.name} target='_blank' rel="noopener noreferrer" className='group'>
               <el.icon className="text-neutral-500 transition-colors group-hover:text-white max-[630px]:w-5 max-[630px]:h-5" width={22} height={22} />
             </a>)
           }

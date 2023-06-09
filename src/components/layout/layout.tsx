@@ -23,7 +23,7 @@ const titleFont = Racing_Sans_One({
 
 const WideNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/navbar-wide').then(module => module.default),
   { loading: () => <NavWideFallback /> })
-const MobileNavbar = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/header-mobile').then(module => module.default),
+const MobileHeader = dynamic(async (): Promise<React.ComponentType> => await import('@/components/navbar/header-mobile').then(module => module.default),
   { loading: () => <NavMobFallback /> })
 
 export function Layout ({ children }: { children: ReactNode }) {
@@ -37,7 +37,7 @@ export function Layout ({ children }: { children: ReactNode }) {
         isMobile === null
           ? <div className='fixed z-100 bg-black top-0 left-0 w-screen h-screen flex justify-center items-center'></div>
           : Boolean(isMobile)
-            ? <MobileNavbar />
+            ? <MobileHeader />
             : <WideNavbar />
       }
     </div>

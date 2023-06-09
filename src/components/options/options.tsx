@@ -24,7 +24,7 @@ export function Options ({ id, isDesign = false }: { id: string, isDesign?: bool
 
   return <>
   <div className='relative'>
-    <button onClick={(e) => { setOpen(prev => !prev) }} className={`p-2 bg-black/40 ${isDesign ? 'bg-white' : ''} rounded-full group transition-colors`}>
+    <button name='Opciones' onClick={(e) => { setOpen(prev => !prev) }} className={`p-2 bg-black/40 ${isDesign ? 'bg-white' : ''} rounded-full group transition-colors`}>
       <OptionsIcon className={`w-7 h-7 transition-colors ${isDesign ? 'text-black' : 'text-white'}`} />
     </button>
     {
