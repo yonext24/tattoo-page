@@ -42,7 +42,7 @@ export default function Home () {
             </Glitch>
           </div>
           <Outline>
-            <Image src='/person.webp' fetchPriority='high' priority={true} alt='Person' height={500} width={400} sizes='70vw, (min-width: 510px) 90vh, (min-width: 630px) 40vw, (min-width: 860px) 90vh' className="h-full rounded-[inherit] object-cover object-top" />
+            <Image src='/person.webp' fetchPriority='high' priority={true} alt='Person' className="h-full rounded-[inherit] object-cover object-top" />
           </Outline>
         </div>
         <div className={b + ' duration-500 ease-out transition-transform grid grid-cols-2 gap-4 mt-2 w-[calc(100%-40px)] max-w-[410px] max-[630px]:pl-[40px]'}>

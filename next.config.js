@@ -7,7 +7,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com'
       }
-    ]
+    ],
+    minimumCacheTTL: 50
   }
 }
 

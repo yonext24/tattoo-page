@@ -14,6 +14,7 @@ import { type ReactNode } from 'react'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { siteURL } from '@/lib/env'
 import { defaultDesc, waitFunc } from '@/lib/consts'
+import { type GetServerSidePropsContext } from 'next'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -58,7 +59,7 @@ Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>
   {page}
 </Layout>
 
-export async function getServerSideProps () {
+export async function getServerSideProps ({ req, res }: GetServerSidePropsContext) {
   try {
     const tattoos = await waitFunc<Tattoo[]>(getTattoos, 5000, 'No se pudo recuperar los tatuajes')
     return {
