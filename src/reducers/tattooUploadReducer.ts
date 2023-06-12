@@ -10,11 +10,12 @@ export const INITIAL_TATTOO_UPLOADER_STATE = {
       height: null,
       path: null
     },
-    nombre: 'Nombre',
-    descripcion: null,
-    duracion: null,
+    nombre: '<NOMBRE>',
+    descripcion: '<DESCRIPCION>',
+    duracion: '<DURACION>',
     homeVisible: true,
-    estilos: []
+    estilos: [],
+    lugar: '<LUGAR>'
   },
   fetch: {
     loading: false,
@@ -35,6 +36,8 @@ export interface tattooType {
   }
   nombre: string | null
   descripcion: string | null
+  lugar: string | null
+  duracion: string | null
   homeVisible: boolean
   estilos: string[] | []
 }
@@ -53,6 +56,9 @@ type ActionTypes =
   | { type: 'updateImageData', payload: { width: number, height: number, url: string } }
   | { type: 'updateImageDataError', payload: string }
   | { type: 'updateImageName', payload: string }
+  | { type: 'updateImageDesc', payload: string }
+  | { type: 'updateImagePlace', payload: string }
+  | { type: 'updateImageDuracion', payload: string }
   | { type: 'updateStyles', payload: string }
   | { type: 'setSubmitError', payload: string }
   | { type: 'setSubmitLoading' }
@@ -81,6 +87,12 @@ export function tattooUploadReducer (state: StateType, action: ActionTypes) {
       return { ...state, tattoo: { ...state.tattoo, error: action.payload } }
     case 'updateImageName':
       return { ...state, tattoo: { ...state.tattoo, nombre: action.payload } }
+    case 'updateImageDesc':
+      return { ...state, tattoo: { ...state.tattoo, descripcion: action.payload } }
+    case 'updateImagePlace':
+      return { ...state, tattoo: { ...state.tattoo, lugar: action.payload } }
+    case 'updateImageDuracion':
+      return { ...state, tattoo: { ...state.tattoo, duracion: action.payload } }
     case 'updateStyles':
       const estilos = action.payload === ''
         ? []

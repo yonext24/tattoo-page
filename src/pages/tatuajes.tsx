@@ -4,7 +4,6 @@ import { PageHeading } from '@/components/common/page-heading'
 import { Seo } from '@/components/common/seo'
 import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
 import { TattooSection } from '@/components/tattoo/tattoo-section'
-import { useFade } from '@/hooks/useFade'
 import { useModalContext } from '@/hooks/useModalContext'
 import { useWindowContext } from '@/hooks/useWindowContext'
 import { getTattoos } from '@/lib/firebase/utils'
@@ -15,6 +14,7 @@ import { type Tattoo } from '@/lib/types/tattoo'
 import { siteURL } from '@/lib/env'
 import { defaultDesc, waitFunc } from '@/lib/consts'
 import { type GetServerSidePropsContext } from 'next'
+import { ErrorComponent } from '@/components/error/errorComponent'
 
 interface Props {
   tattoos?: Tattoo[]
@@ -27,7 +27,6 @@ const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooMo
   { loading: () => <TattooModalFallback /> })
 
 export default function Tatuajes ({ tattoos, error }: Props) {
-  const { intersected } = useFade()
   const { state } = useModalContext() ?? {}
   const { isMobile } = useWindowContext() ?? {}
 
@@ -37,14 +36,17 @@ export default function Tatuajes ({ tattoos, error }: Props) {
       image={`${siteURL}/logo.webp`}
       imageType='image/webp'
     />
-    <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none' >
-      <PageHeading text='Tatuajes' intersected={intersected} />
-      {
-        error !== undefined && error !== null && <div>{error}</div>
-      }
-      {
-        tattoos !== undefined && <TattooSection tattoos={tattoos} intersected={intersected} />
-      }
+    <main className='flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl
+    max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none items-center' >
+      <PageHeading text='Tatuajes' />
+      <div className='flex-1 w-full flex'>
+        {
+          error !== undefined && error !== null && <ErrorComponent error={error} />
+        }
+        {
+          tattoos !== undefined && <TattooSection tattoos={tattoos} />
+        }
+      </div>
       <Footer />
     </main>
     {
@@ -59,7 +61,7 @@ Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>
   {page}
 </Layout>
 
-export async function getServerSideProps ({ req, res }: GetServerSidePropsContext) {
+export async function getServerSideProps (ctx: GetServerSidePropsContext) {
   try {
     const tattoos = await waitFunc<Tattoo[]>(getTattoos, 5000, 'No se pudo recuperar los tatuajes')
     return {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { TattooAdminImageRender } from '@/components/admin/tattoo-admin-image-render'
@@ -9,9 +10,8 @@ import { ProtectedRoute } from '@/components/layout/protected-route'
 import { useUploadTattoo } from '@/hooks/useUploadTattoo'
 
 export default function TattooUploadPage () {
-  const { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state, fileInputRef } = useUploadTattoo()
+  const { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, descHandler, placeHandler, duracionHandler, state, fileInputRef } = useUploadTattoo()
   const { tattoo, fetch } = state
-  console.log(state)
   return <>
 
   <Seo title='Designs / Neptuno Black Tattoos' />
@@ -28,7 +28,7 @@ export default function TattooUploadPage () {
         </label>
 
         <TattooAdminImageRender tattoo={tattoo} />
-        <TattooAdminInputs estilosHandler={estilosHandler} nombreHandler={nombreHandler} tattoo={tattoo} fetch={fetch} />
+        <TattooAdminInputs estilosHandler={estilosHandler} nombreHandler={nombreHandler} descHandler={descHandler} duracionHandler={duracionHandler} placeHandler={placeHandler} tattoo={tattoo} fetch={fetch} />
         {
           fetch.error
             ? <span className='text-red-500 text-center w-full'>{fetch.error}</span>

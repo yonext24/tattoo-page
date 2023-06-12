@@ -5,7 +5,6 @@ import { Seo } from '@/components/common/seo'
 import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
 import { SearchInput } from '@/components/search/search-input'
 import { SearchRender } from '@/components/search/search-render'
-import { useFade } from '@/hooks/useFade'
 import { useModalContext } from '@/hooks/useModalContext'
 import { useSearch } from '@/hooks/useSearch'
 import { useWindowContext } from '@/hooks/useWindowContext'
@@ -31,7 +30,6 @@ const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooMo
   { loading: () => <TattooModalFallback /> })
 
 export default function Busqueda ({ tattoos: serverTattoos, error: serverError, query, singleTattoo }: Props) {
-  const { intersected } = useFade()
   const { state } = useModalContext() ?? {}
   const { isMobile } = useWindowContext() ?? {}
   const { onChange, value, state: tattoosState } = useSearch({ tattoos: serverTattoos, query, singleTattoo, serverError })
@@ -63,10 +61,10 @@ export default function Busqueda ({ tattoos: serverTattoos, error: serverError, 
 
     <main className='flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl
     max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none items-center'>
-      <PageHeading intersected={intersected} text='Búsqueda' />
-      <SearchInput onChange={onChange} value={value} intersected={intersected} />
-      <div className='relative flex-1 w-full'>
-        <SearchRender loading={loading} error={error} tattoos={tattoos} intersected={intersected} />
+      <PageHeading text='Búsqueda' />
+      <SearchInput onChange={onChange} value={value} />
+      <div className='relative flex-1 w-full flex'>
+        <SearchRender loading={loading} error={error} tattoos={tattoos} />
       </div>
       <Footer />
     </main>

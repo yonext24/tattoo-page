@@ -4,7 +4,6 @@ import { Seo } from '@/components/common/seo'
 import { DesignSection } from '@/components/design/design-section'
 import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
 import { type DesignModalProps } from '@/components/modals/design-modal/design-modal'
-import { useFade } from '@/hooks/useFade'
 import { useModalContext } from '@/hooks/useModalContext'
 import { getDesigns, getSingleDesign } from '@/lib/firebase/utils'
 import { type Design } from '@/lib/types/design'
@@ -13,6 +12,8 @@ import { useEffect, type ReactNode } from 'react'
 import { siteURL } from '@/lib/env'
 import { type GetServerSidePropsContext } from 'next'
 import { defaultDesc, waitFunc } from '@/lib/consts'
+import { PageHeading } from '@/components/common/page-heading'
+import { ErrorComponent } from '@/components/error/errorComponent'
 
 interface PageProps {
   error?: string
@@ -25,7 +26,6 @@ const DesignModal = dynamic(async (): Promise<React.ComponentType<DesignModalPro
   { loading: () => <TattooModalFallback /> })
 
 export default function Designs ({ error, designs, singleDesign }: PageProps) {
-  const { intersected } = useFade()
   const { state, dispatch } = useModalContext() ?? {}
 
   useEffect(() => {
@@ -58,13 +58,18 @@ export default function Designs ({ error, designs, singleDesign }: PageProps) {
           />
     }
 
-    <main className='flex-1 pr-2 h-max max-w-xl max-[630px]:max-w-none'>
-      {
-        Boolean(error) && <span>{error}</span>
-      }
-      {
-        (designs !== undefined) && <DesignSection intersected={intersected} designs={designs} />
-      }
+    <main className='flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl
+    max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none items-center'>
+      <div className='flex-1 relative flex flex-col'>
+        <PageHeading text='Diseños' />
+
+        {
+          Boolean(error) && <ErrorComponent error={error} />
+        }
+        {
+          (designs !== undefined) && <DesignSection designs={designs} />
+        }
+      </div>
       <Footer />
     </main>
     {

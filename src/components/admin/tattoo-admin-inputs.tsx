@@ -11,12 +11,19 @@ interface Props {
   }
   nombreHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
   estilosHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
+  placeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
+  descHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
+  duracionHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export function TattooAdminInputs ({ tattoo, fetch, nombreHandler, estilosHandler }: Props) {
+export function TattooAdminInputs ({ tattoo, fetch, nombreHandler, estilosHandler, placeHandler, duracionHandler, descHandler }: Props) {
   if (typeof tattoo.image.url !== 'string' || typeof tattoo.image.height !== 'number' || typeof tattoo.image.width !== 'number' || typeof tattoo.nombre !== 'string') return null
 
+  const finalDesc = tattoo.descripcion !== null && tattoo.descripcion !== '' ? `${tattoo.descripcion ?? ''}.` : tattoo.descripcion
   return <>
+    <p className='ml-auto inline max-[665px]:text-sm'>{finalDesc}
+      <span className='inline text-gold'> Hecho en {tattoo.lugar} en una duración de {tattoo.duracion}</span>
+    </p>
     <div className="gap-y-3 flex flex-col h-max min-[700px]:grid min-[700px]:grid-cols-2 gap-x-2 w-full [&>input[type=text]]:bg-black [&>input[type=text]]:border-2
       [&>input[type=text]]:border-white [&>input[type=text]]:py-3 [&>input[type=text]]:px-4 [&>input[type=text]]:outline-none
       [&>input[type=text]]:rounded-md">
@@ -26,9 +33,9 @@ export function TattooAdminInputs ({ tattoo, fetch, nombreHandler, estilosHandle
         <input type='checkbox' name='homeVisible' id='homeVisible' className="h-5 w-5"></input>
         <span>Visible en la página de tatuajes?</span>
       </label>
-      <input type='text' name='descripcion' placeholder="Descripcion"></input>
-      <input type='text' name='lugar' placeholder="Lugar"></input>
-      <input type='text' name='duracion' placeholder="Duración"></input>
+      <input type='text' name='descripcion' placeholder="Descripcion" onChange={descHandler}></input>
+      <input type='text' name='lugar' placeholder="Lugar" onChange={placeHandler}></input>
+      <input type='text' name='duracion' placeholder="Duración" onChange={duracionHandler}></input>
       <input type='text' name='estilos' placeholder="Estilos" onChange={estilosHandler}></input>
       <div className='flex gap-x-2 h-10 items-start'>
         {

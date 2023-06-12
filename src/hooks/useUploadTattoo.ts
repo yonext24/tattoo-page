@@ -37,6 +37,15 @@ export function useUploadTattoo () {
   const nombreHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'updateImageName', payload: e.target.value })
   }
+  const descHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'updateImageDesc', payload: e.target.value })
+  }
+  const placeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'updateImagePlace', payload: e.target.value })
+  }
+  const duracionHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'updateImageDuracion', payload: e.target.value })
+  }
   const estilosHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'updateStyles', payload: e.target.value })
   }
@@ -104,5 +113,5 @@ export function useUploadTattoo () {
       .catch(() => { dispatch({ type: 'setSubmitError', payload: 'Error al subir el documento a la base de datos' }) })
   }
 
-  return { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, state, fileInputRef }
+  return { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, duracionHandler, placeHandler, descHandler, state, fileInputRef }
 }
