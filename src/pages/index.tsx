@@ -11,8 +11,8 @@ import { siteURL } from '@/lib/env'
 import { defaultDesc } from '@/lib/consts'
 
 const medias = [
-  { name: 'Instagram', url: 'instagram.com' },
-  { name: 'Whatsapp', url: 'whatsapp.com' }
+  { name: 'Instagram', url: 'https://www.instagram.com/alan.h.tattoo/' },
+  { name: 'Whatsapp', url: 'https://www.whatsapp.com' }
 ]
 
 export default function Home () {
@@ -35,7 +35,7 @@ export default function Home () {
             </Glitch>
           </div>
           <Outline>
-            <Image src='/person.webp' fetchPriority='high' priority={true} alt='Person' height={500} width={401} className="h-full rounded-[inherit] object-cover object-top" />
+            <Image src='/alan.jfif' fetchPriority='high' priority={true} alt='Person' height={500} width={401} className="h-full rounded-[inherit] object-cover object-top" />
           </Outline>
         </div>
         <div className={'animate-fadeRight duration-500 ease-out transition-transform grid grid-cols-2 gap-4 mt-2 w-[calc(100%-40px)] max-w-[410px] max-[630px]:pl-[40px]'}>
