@@ -12,7 +12,7 @@ import { defaultDesc } from '@/lib/consts'
 
 const medias = [
   { name: 'Instagram', url: 'https://www.instagram.com/alan.h.tattoo/' },
-  { name: 'Whatsapp', url: 'https://www.whatsapp.com' }
+  { name: 'Whatsapp', url: 'https://api.whatsapp.com/send?phone=1164728262' }
 ]
 
 export default function Home () {

@@ -4,7 +4,7 @@ import WhatsappIcon from '../icons/whatsapp-icon'
 
 const redes = [
   { name: 'Instagram', href: 'https://www.instagram.com/alannn.tattoo/', icon: InstagramIcon, htmlName: 'Abrir instagram' },
-  { name: 'Whatsapp', href: 'https://wa.link/iafyq7', icon: WhatsappIcon, htmlName: 'Abrir whatsapp' }
+  { name: 'Whatsapp', href: 'https://api.whatsapp.com/send?phone=1164728262', icon: WhatsappIcon, htmlName: 'Abrir whatsapp' }
 ]
 
 export function Footer () {
