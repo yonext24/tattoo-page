@@ -40,7 +40,9 @@ export default function DesignModal ({ closeModal, design }: DesignModalProps) {
             imageClassname='object-contain h-full rounded-lg transition-opacity duration-300 w-auto max-h-[90vh]'
             loaderClassname='top-0 left-0 w-full h-full flex'
         />
-        <div className='w-full mb-1 px-1 grid grid-cols-2 justify-end items-end gap-2 absolute bottom-0 z-10'>
+        <div
+        style={{ opacity: loaded ? '1' : '0' }}
+        className='w-full mb-1 px-1 grid grid-cols-2 justify-end items-end gap-2 absolute bottom-0 z-10 transition-opacity'>
           <button
             onClick={() => { void copyHandler() }}
             className={`border-y rounded-md py-2 border-black flex justify-center items-center transition-all relative overflow-hidden group hover:after:left-0 max-[730px]:text-sm ${copied ? 'hover:border-green-800' : 'hover:border-gold'}
@@ -53,7 +55,7 @@ export default function DesignModal ({ closeModal, design }: DesignModalProps) {
               }
             </span>
           </button>
-          <MediaCard name='Consultar en whatsapp' className='py-2 after:top-0 max-[730px]:text-sm [border-width:1px_0_1px_0] rounded-md text-black border-black' url={`https://api.whatsapp.com/send?phone=541164748262&text=Hola, quiero consultar por este diseño: https://neptunoblack.vercel.app/designs?design=${design.id}`} />
+          <MediaCard styles={{ borderColor: 'black' }} name='Consultar en whatsapp' className='py-2 after:top-0 max-[730px]:text-sm [border-width:1px_0_1px_0] rounded-md text-black border-black' url={`https://api.whatsapp.com/send?phone=541164748262&text=Hola, quiero consultar por este diseño: https://neptunoblack.vercel.app/designs?design=${design.id}`} />
         </div>
         {
           Boolean(admin) &&
