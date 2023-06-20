@@ -96,7 +96,7 @@ body {
     box-shadow: .2em -.2em 0 0 currentcolor;
   }
 }
-@media only screen and (max-width: 670px) {
+@media only screen and (max-width: 700px) {
   .imageAspect {
     aspect-ratio: auto!important;
   }

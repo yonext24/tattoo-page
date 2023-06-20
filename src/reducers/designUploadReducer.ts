@@ -8,8 +8,8 @@ export const INITIAL_DESIGN_UPLOADER_STATE = {
       url: null,
       path: null
     },
-    nombre: 'Nombre',
-    precio: '0'
+    nombre: '',
+    precio: ''
   },
   fetch: {
     loading: false,

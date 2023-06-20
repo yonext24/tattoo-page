@@ -10,8 +10,8 @@ export const INITIAL_TATTOO_UPLOADER_STATE = {
       height: null,
       path: null
     },
-    nombre: '<NOMBRE>',
-    descripcion: '<DESCRIPCION>',
+    nombre: '',
+    descripcion: '',
     duracion: '<DURACION>',
     homeVisible: true,
     estilos: [],
@@ -90,13 +90,13 @@ export function tattooUploadReducer (state: StateType, action: ActionTypes) {
     case 'updateImageDesc':
       return { ...state, tattoo: { ...state.tattoo, descripcion: action.payload } }
     case 'updateImagePlace':
-      return { ...state, tattoo: { ...state.tattoo, lugar: action.payload } }
+      return { ...state, tattoo: { ...state.tattoo, lugar: action.payload.toLowerCase() } }
     case 'updateImageDuracion':
       return { ...state, tattoo: { ...state.tattoo, duracion: action.payload } }
     case 'updateStyles':
       const estilos = action.payload === ''
         ? []
-        : action.payload.split(' ')
+        : action.payload.toLowerCase().split(' ')
       return { ...state, tattoo: { ...state.tattoo, estilos } }
     case 'setSubmitError':
       return { ...state, fetch: { loading: false, error: action.payload, success: false } }
