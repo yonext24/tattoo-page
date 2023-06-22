@@ -36,7 +36,7 @@ export default function DesignUploadPage () {
       </form>
 
       <div id='loading_screen' className={`absolute top-0 left-0 transition-colors z-20 w-full h-full flex justify-center items-center
-      max-[630px]:fixed bg-transparent pointer-events-none 
+      max-[630px]:fixed pointer-events-none 
       ${fetch.loading ? 'bg-white/50 pointer-events-auto' : ''}
       ${fetch.success ? 'bg-green-400/60 pointer-events-auto' : ''}
       ${fetch.error ? 'bg-red-400/70 pointer-events-auto' : ''}`}>
