@@ -1,4 +1,7 @@
-import { type QueryDocumentSnapshot, type SnapshotOptions } from 'firebase/firestore'
+import {
+  type QueryDocumentSnapshot,
+  type SnapshotOptions
+} from 'firebase/firestore'
 
 export interface DesignImage {
   src: string
@@ -17,19 +20,14 @@ export interface Design {
 }
 
 export const designsConverter = {
-  toFirestore (design: Design) {
+  toFirestore(design: Design) {
     const { id, ...data } = design
     return { ...data }
   },
-  fromFirestore (
-    snapshot: QueryDocumentSnapshot,
-    options: SnapshotOptions
-  ) {
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions) {
     const { id } = snapshot
     const data = snapshot.data(options)
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return { id, ...data } as Design
   }
-
 }

@@ -1,4 +1,7 @@
-import { type QueryDocumentSnapshot, type SnapshotOptions } from 'firebase/firestore'
+import {
+  type QueryDocumentSnapshot,
+  type SnapshotOptions
+} from 'firebase/firestore'
 
 export interface ImagesData {
   original: {
@@ -33,18 +36,13 @@ export interface oldTattoo {
 }
 
 export const tattooConverter = {
-  toFirestore (tattoo: oldTattoo) {
+  toFirestore(tattoo: oldTattoo) {
     return { ...tattoo }
   },
-  fromFirestore (
-    snapshot: QueryDocumentSnapshot,
-    options: SnapshotOptions
-  ) {
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions) {
     const { id } = snapshot
     const data = snapshot.data(options)
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return { id, ...data } as oldTattoo
   }
-
 }

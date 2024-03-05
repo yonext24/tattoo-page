@@ -20,7 +20,6 @@ export function DesignAdminCard ({ precio, src }: Props) {
       width={400}
       height={450}
       handleLoad={handleLoad}
-      loaded={loaded}
       sizes='(max-width: 576px) 40vw, (max-width: 630px) 250px, (max-width: 971px) 30vw, 250px'
       imageClassname='rounded-[inherit] group-hover:scale-110 transition-transform duration-200 ease-out'
       loaderClassname='top-0 left-0 w-full h-full flex bg-gradient-to-br from-transparent via-transparent to-white/25'

@@ -35,7 +35,6 @@ export default function DesignModal ({ closeModal, design }: DesignModalProps) {
             alt={design.nombre}
             width={1000}
             height={800}
-            loaded={loaded}
             handleLoad={handleLoad}
             imageClassname='object-contain h-full rounded-lg transition-opacity duration-300 w-auto max-h-[90vh]'
             loaderClassname='top-0 left-0 w-full h-full flex'

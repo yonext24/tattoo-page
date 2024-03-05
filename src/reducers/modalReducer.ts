@@ -4,11 +4,11 @@ import { INITIAL_STATE } from '@/contexts/ModalContext'
 import { type Design } from '@/lib/types/design'
 
 export type ActionTypes =
-  | { type: 'openTattoo', payload: Tattoo }
-  | { type: 'openDesign', payload: Design }
+  | { type: 'openTattoo'; payload: Tattoo }
+  | { type: 'openDesign'; payload: Design }
   | { type: 'closeModal' }
 
-export function modalReducer (state: StateType, action: ActionTypes) {
+export function modalReducer(state: StateType, action: ActionTypes) {
   switch (action.type) {
     case 'closeModal':
       return INITIAL_STATE

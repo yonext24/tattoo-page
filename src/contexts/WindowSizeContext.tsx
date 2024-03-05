@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-extra-boolean-cast */
 import { type ReactNode, createContext, useEffect, useState } from 'react'
 
@@ -5,9 +6,15 @@ interface WindowContextType {
   isMobile: boolean | null
 }
 
-export const WindowSizeContext = createContext<WindowContextType | undefined>(undefined)
+export const WindowSizeContext = createContext<WindowContextType | undefined>(
+  undefined
+)
 
-export const WindowSizeContextProvider = ({ children }: { children: ReactNode }) => {
+export const WindowSizeContextProvider = ({
+  children
+}: {
+  children: ReactNode
+}) => {
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -29,7 +36,9 @@ export const WindowSizeContextProvider = ({ children }: { children: ReactNode })
     }
   }, [])
 
-  return <WindowSizeContext.Provider value={{ isMobile }}>
-    {children}
-  </WindowSizeContext.Provider>
+  return (
+    <WindowSizeContext.Provider value={{ isMobile }}>
+      {children}
+    </WindowSizeContext.Provider>
+  )
 }

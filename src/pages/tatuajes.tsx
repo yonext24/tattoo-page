@@ -2,13 +2,8 @@ import { Footer } from '@/components/footer/footer'
 import { Layout } from '@/components/layout/layout'
 import { PageHeading } from '@/components/common/page-heading'
 import { Seo } from '@/components/common/seo'
-import { TattooModalFallback } from '@/components/fallbacks/tattoo-modal-fallback'
 import { TattooSection } from '@/components/tattoo/tattoo-section'
-import { useModalContext } from '@/hooks/useModalContext'
-import { useWindowContext } from '@/hooks/useWindowContext'
 import { getTattoos } from '@/lib/firebase/utils'
-import { type TattooModalProps } from '@/lib/types/tattooModal'
-import dynamic from 'next/dynamic'
 import { type ReactNode } from 'react'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { siteURL } from '@/lib/env'
@@ -21,15 +16,7 @@ interface Props {
   error?: string
 }
 
-const TattooModalWide = dynamic(async (): Promise<React.ComponentType<TattooModalProps>> => await import('@/components/modals/tattooModal/tattoo-modal-wide').then(module => module.default),
-  { loading: () => <TattooModalFallback /> })
-const TattooModalMobile = dynamic(async (): Promise<React.ComponentType<TattooModalProps>> => await import('@/components/modals/tattooModal/tattoo-modal-mobile').then(module => module.default),
-  { loading: () => <TattooModalFallback /> })
-
 export default function Tatuajes ({ tattoos, error }: Props) {
-  const { state } = useModalContext() ?? {}
-  const { isMobile } = useWindowContext() ?? {}
-
   return <>
     <Seo title='Tatuajes / Neptuno Black Tatuajes'
       description={'Página de los tatuajes realizados por Alan Hernandez.' + defaultDesc}
@@ -49,11 +36,6 @@ export default function Tatuajes ({ tattoos, error }: Props) {
       </div>
       <Footer />
     </main>
-    {
-      (isMobile ?? false)
-        ? (state?.open !== undefined) && ((state?.tattoo) != null) && state.open && <TattooModalMobile tattoo={state.tattoo} />
-        : (state?.open !== undefined) && ((state?.tattoo) != null) && state.open && <TattooModalWide tattoo={state.tattoo} />
-    }
   </>
 }
 

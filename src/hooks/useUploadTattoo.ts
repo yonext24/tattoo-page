@@ -1,117 +1,135 @@
-import { agregarTatuaje, subirImagen } from '@/lib/firebase/utils'
-import { getImageDimensionsFromFile } from '@/lib/getImageDimensions'
-import { type Tattoo } from '@/lib/types/tattoo'
-import { INITIAL_TATTOO_UPLOADER_STATE, tattooUploadReducer } from '@/reducers/tattooUploadReducer'
-import { useEffect, useReducer, useRef } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { agregarTatuaje, generateTattooSlug } from '@/lib/firebase/utils'
+import { TattooWithoutId, type Tattoo } from '@/lib/types/tattoo'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef } from 'react'
+import { appFetch } from '@/lib/appFetch'
+import { ImageCompressionApiEndpointResponse } from '@/pages/api/images'
+import { imageCompressionApiEndpointSchema } from '@/lib/validations/upload-tattoo'
+import useUser from './useUser'
+import { toast } from 'sonner'
+import { auth } from '@/lib/firebase/app'
 
-export function useUploadTattoo () {
-  const [state, dispatch] = useReducer(tattooUploadReducer, INITIAL_TATTOO_UPLOADER_STATE)
+const formSchema = z.object({
+  image: z.instanceof(File, { message: 'La imágen es obligatoria.' }),
+  nombre: z
+    .string({ required_error: 'El nombre es obligatorio.' })
+    .min(1, { message: 'El nombre debe tener al menos un caracter.' })
+    .max(30, { message: 'El nombre no debe tener más de 30 caracteres.' }),
+  descripcion: z
+    .string()
+    .max(400, {
+      message: 'La descripción no debe tener más de 400 caracteres.'
+    })
+    .optional(),
+  homeVisible: z.boolean().default(true),
+  estilos: z.array(
+    z.string().min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+  ),
+  tags: z.array(
+    z.string().min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+  ),
+  extra_images: z.instanceof(File).array()
+})
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export type AddTattooFormTypes = z.infer<typeof formSchema>
+const formDefaultValues = {
+  estilos: [],
+  tags: [],
+  homeVisible: true,
+  descripcion: '',
+  image: undefined,
+  nombre: '',
+  extra_images: []
+}
+
+export function useUploadTattoo() {
+  const form = useForm<AddTattooFormTypes>({
+    resolver: zodResolver(formSchema),
+    defaultValues: formDefaultValues
+  })
+
+  const { handleSubmit, setError } = form
+  const user = useUser()
+
+  const imageSelectorRef = useRef<any>()
+  const extraImageSelectorRef = useRef<any>()
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      dispatch({ type: 'setReset' })
-    }, 2500)
-
-    if (fileInputRef.current != null) {
-      fileInputRef.current.files = null
+    if (form.formState.isSubmitSuccessful) {
+      imageSelectorRef?.current?.reset()
+      extraImageSelectorRef?.current?.reset()
+      form.reset(formDefaultValues)
     }
+  }, [form.formState.isSubmitSuccessful])
 
-    return () => { clearTimeout(id) }
-  }, [state.fetch.error, state.fetch.success])
-
-  const uploadImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'uploadImageLoading' })
-    const files = e.target.files
-    if (!((files != null) && files.length > 0)) return
-
-    getImageDimensionsFromFile(files[0])
-      .then(({ url, width, height }) => {
-        dispatch({ type: 'updateImageData', payload: { url, width, height } })
-      })
-      .catch(() => {
-        dispatch({ type: 'updateImageDataError', payload: 'Error al obtener la imágen.' })
-      })
-  }
-  const nombreHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateImageName', payload: e.target.value })
-  }
-  const descHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateImageDesc', payload: e.target.value })
-  }
-  const placeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateImagePlace', payload: e.target.value })
-  }
-  const duracionHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateImageDuracion', payload: e.target.value })
-  }
-  const estilosHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateStyles', payload: e.target.value })
-  }
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (state?.tattoo?.image?.width === null && state?.tattoo?.image?.height === null) {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      dispatch({ type: 'setSubmitError', payload: 'Error, no se consiguió el ancho o alto de la imágen, recargá la página y intentá denuevo.' })
+  const submitHandler = handleSubmit(async (data) => {
+    if (!user || !user.isAdmin) {
+      setError('root', { message: 'No estás autorizado.' })
       return
     }
-    const { width, height } = state.tattoo.image
-    const { estilos } = state.tattoo
+    const toastId = 'add-tatuaje-loading-toast'
+    toast.loading('El tatuaje se está creando', { id: toastId })
 
-    dispatch({ type: 'setSubmitLoading' })
-
-    const formData = new FormData(e.target as HTMLFormElement)
-
-    const {
-      descripcion,
-      duracion,
-      lugar,
-      nombre,
-      image
-    } = Object.fromEntries(formData)
-
-    const homeVisible = formData.get('homeVisible') !== null
-
-    let src: string, path: string
-    let compressedSrc: string, compressedPath: string
     try {
-      const { original, compressed } = await subirImagen(image as File, true)
-      src = original.src
-      path = original.path
-      compressedSrc = compressed.src
-      compressedPath = compressed.path
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir la imágen'
-      dispatch({ type: 'setSubmitError', payload: errorMessage })
-      return
-    }
+      const { descripcion, nombre, image, estilos, homeVisible } = data
+      const slug = await generateTattooSlug(nombre, estilos)
+      console.log({ slug })
+      const toSend = new FormData()
+      toSend.set('slug', slug)
+      toSend.append('primary', image)
+      for (const img of data.extra_images) {
+        toSend.append('extra', img)
+      }
 
-    const finalData: Tattoo = {
-      id: 'placeholder',
-      descripcion: descripcion as string,
-      duracion: duracion as string,
-      lugar: lugar as string,
-      nombre: nombre as string,
-      estilos,
-      homeVisible,
-      image: {
-        width: width as number,
-        height: height as number,
-        path,
-        src,
-        compressed: {
-          src: compressedSrc,
-          path: compressedPath
+      const token = await auth.currentUser?.getIdToken?.(true)
+      const images = await appFetch<ImageCompressionApiEndpointResponse>(
+        '/api/images',
+        {
+          body: toSend,
+          method: 'POST',
+          headers: { authentication: token ?? '' }
+        }
+      )
+
+      const parsedImages = imageCompressionApiEndpointSchema.safeParse(
+        images?.data
+      )
+
+      if (!parsedImages.success) {
+        console.error(parsedImages.error)
+        setError('image', { message: 'Ocurrió un error al subir la imágen' })
+        return
+      }
+
+      const tattoo: TattooWithoutId = {
+        descripcion: descripcion as string,
+        nombre,
+        estilos,
+        slug,
+        homeVisible,
+        images: {
+          original: parsedImages.data.primary.original,
+          compressed: parsedImages.data.primary.compressed,
+          extra: parsedImages.data.extra
         }
       }
+
+      await agregarTatuaje(tattoo)
+        .catch((err) => {
+          setError('root', { message: err.message })
+        })
+        .then(() => {
+          toast.success('Tatuaje creado con éxito', { id: toastId })
+        })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError('root', { message })
+      toast.error(message, { id: toastId })
     }
+  })
 
-    agregarTatuaje(finalData)
-      .then(() => { dispatch({ type: 'setSubmitSuccess' }) })
-      .catch(() => { dispatch({ type: 'setSubmitError', payload: 'Error al subir el documento a la base de datos' }) })
-  }
-
-  return { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, duracionHandler, placeHandler, descHandler, state, fileInputRef }
+  return { submitHandler, form, imageSelectorRef, extraImageSelectorRef }
 }

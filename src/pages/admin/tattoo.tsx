@@ -1,67 +1,203 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { TattooAdminImageRender } from '@/components/admin/tattoo-admin-image-render'
-import { TattooAdminInputs } from '@/components/admin/tattoo-admin-inputs'
+/* eslint-disable @next/next/no-img-element */
+import { ExtraImagesSelector } from '@/components/admin/add-tatuaje/extra-image-selector/extra-image-selector'
+import { ImagePicker } from '@/components/common/image-picker'
+import { Selector } from '@/components/common/selector'
 import { Seo } from '@/components/common/seo'
-import { Spinner } from '@/components/common/spinner'
+import { SubmitButton } from '@/components/common/submit-button'
 import { Layout } from '@/components/layout/layout'
 import { ProtectedRoute } from '@/components/layout/protected-route'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 import { useUploadTattoo } from '@/hooks/useUploadTattoo'
 
-export default function TattooUploadPage () {
-  const { nombreHandler, submitHandler, estilosHandler, uploadImageHandler, descHandler, placeHandler, duracionHandler, state, fileInputRef } = useUploadTattoo()
-  const { tattoo, fetch } = state
-  return <>
+export default function TattooUploadPage() {
+  const { submitHandler, form, imageSelectorRef, extraImageSelectorRef } =
+    useUploadTattoo()
+  const {
+    formState: { isSubmitting }
+  } = form
 
-  <Seo title='Designs / Neptuno Black Tattoos' />
-    <main className='flex-1 h-max overflow-y-hidden pr-2 flex flex-col min-h-screen items-center max-w-xl pl-2 relative
-      max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none'>
-      <h1 className='text-4xl title mb-12 mt-4'>Subir Tatuaje</h1>
+  return (
+    <>
+      <Seo title="Designs / Neptuno Black Tattoos" />
+      <main
+        className="flex-1 py-2 h-max overflow-y-hidden pr-2 flex flex-col min-h-screen items-center max-w-[450px] pl-2 relative
+      max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none"
+      >
+        <h1 className="text-4xl title mb-12 mt-4">Subir Tatuaje</h1>
 
-      <form onSubmit={submitHandler} className='flex-1 flex flex-col items-center mx-auto relatie'>
-
-        <input onChange={uploadImageHandler} ref={fileInputRef} className='hidden' required id='image' name='image' type='file' accept="image/png, image/jpeg" />
-        <label htmlFor='image'
-        className='bg-white py-3 px-8 text-black font-bold text-xl cursor-pointer border-2 rounded-md hover:bg-black hover:text-white transition-colors'>
-          {tattoo.image.url === null ? 'Subir Imagen' : 'Cambiar Imágen'}
-        </label>
-
-        <TattooAdminImageRender tattoo={tattoo} />
-        <TattooAdminInputs estilosHandler={estilosHandler} nombreHandler={nombreHandler} descHandler={descHandler} duracionHandler={duracionHandler} placeHandler={placeHandler} tattoo={tattoo} fetch={fetch} />
-        {
-          fetch.error
-            ? <span className='text-red-500 text-center w-full'>{fetch.error}</span>
-            : <div className='h-12'></div>
-        }
-      </form>
-
-      <div id='loading_screen' className={`absolute top-0 left-0 transition-colors z-20 w-full h-full flex justify-center items-center
-      max-[630px]:fixed pointer-events-none
-      ${fetch.loading ? 'bg-white/50 pointer-events-auto' : ''}
-      ${fetch.success ? 'bg-green-400/60 pointer-events-auto' : ''}
-      ${fetch.error ? 'bg-red-400/70 pointer-events-auto' : ''}`}>
-        {
-          fetch.loading && <Spinner className='w-8 h-8' />
-        }
-        {
-          fetch.success && <span className='text-black text-xl font-bold text-center'>El tatuaje se subió correctamente.</span>
-        }
-        {
-          fetch.error && <span className='text-black text-xl font-bold text-center'>{fetch.error}</span>
-        }
-      </div>
-
-    </main>
-
-  </>
+        <Form {...form}>
+          <form
+            onSubmit={submitHandler}
+            className="w-full flex flex-col items-center mx-auto relative gap-4 [&>*]:w-full"
+          >
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange } }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Imágen</FormLabel>
+                    <FormControl>
+                      <ImagePicker
+                        ref={imageSelectorRef}
+                        onChange={onChange}
+                        accept="image/webp,image/jpg,image/png,image/jpeg"
+                        render={(url) => <img src={url} alt="" />}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="extra_images"
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel>Imágenes extra del tatuaje</FormLabel>
+                    <FormControl>
+                      <ExtraImagesSelector
+                        ref={extraImageSelectorRef}
+                        value={value}
+                        onChange={onChange}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Las imágenes secundarias del tatuaje.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="nombre"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      Este nombre será el que se utilizará en el título de la
+                      página del tatuaje, también para generar la url del mismo,
+                      es obligatorio.
+                    </FormDescription>
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="descripcion"
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Visible en la página de tatuajes</FormLabel>
+                    <FormControl>
+                      <Switch {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      Esta opción controla si el tatuaje va a ser mostrado en la
+                      página principal /tatuajes, si seteas la opción en no, el
+                      tatuaje sólo aparecerá en la página de búsqueda, la idea
+                      detrás de estro es que sólo tengas tus mejores tatuajes en
+                      /tatuajes, y que en búsqueda los subas todos, para después
+                      poder filtrarlos. Si seteas la opción en sí, el tatuaje
+                      también aparecerá en la página de búsqueda.
+                    </FormDescription>
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="descripcion"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Descripción</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      La descripción del tatuaje, es opcional, podes dejarla
+                      vacía si no tenes nada que decir sobre el tatuaje.
+                    </FormDescription>
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="estilos"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Estilos</FormLabel>
+                    <FormControl>
+                      <Selector
+                        selectedValues={field.value}
+                        onChange={field.onChange}
+                        description="Los estilos del tatuaje, por ejemplo: realismo, tradicional, blackwork, etc. No son obligatorios, pero ayudan a la hora de buscar tatuajes."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Tags</FormLabel>
+                    <FormControl>
+                      <Selector
+                        selectedValues={field.value}
+                        onChange={field.onChange}
+                        description="Los tags del tatuaje, por ejemplo: brazo, flores, etc. No son obligatorios, pero ayudan a la hora de buscar tatuajes y linkearlos entre sí."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            {form.formState.errors.root && (
+              <span className="text-destructive">
+                {form.formState.errors.root.message}
+              </span>
+            )}
+            <SubmitButton loading={isSubmitting} />
+          </form>
+        </Form>
+      </main>
+    </>
+  )
 }
 
 TattooUploadPage.getLayout = (page: React.ReactNode) => (
   <Layout>
-    <ProtectedRoute>
-      {page}
-    </ProtectedRoute>
+    <ProtectedRoute>{page}</ProtectedRoute>
   </Layout>
-
 )
