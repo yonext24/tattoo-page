@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 import { useUploadTattoo } from '@/hooks/useUploadTattoo'
 
 export default function TattooUploadPage() {
@@ -134,7 +135,7 @@ export default function TattooUploadPage() {
                   <FormItem>
                     <FormLabel>Descripción</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                     <FormDescription>

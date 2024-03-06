@@ -1,20 +1,27 @@
-import { DesignAdminImageRender } from '@/components/admin/design-admin-image-render'
-import { DesignAdminInputs } from '@/components/admin/design-admin-inputs'
+/* eslint-disable @next/next/no-img-element */
+import { ExtraImagesSelector } from '@/components/admin/add-tatuaje/extra-image-selector/extra-image-selector'
+import { ImagePicker } from '@/components/common/image-picker'
 import { Seo } from '@/components/common/seo'
-import { Spinner } from '@/components/common/spinner'
+import { SubmitButton } from '@/components/common/submit-button'
 import { Layout } from '@/components/layout/layout'
 import { ProtectedRoute } from '@/components/layout/protected-route'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { useUploadDesign } from '@/hooks/useUploadDesign'
 
 export default function DesignUploadPage() {
-  const {
-    submitHandler,
-    precioHandler,
-    uploadImageHandler,
-    state,
-    fileInputRef
-  } = useUploadDesign()
-  const { design, fetch } = state
+  const { form, onSubmit, imageSelectorRef, extraImagesSelectorRef } =
+    useUploadDesign()
+
   return (
     <>
       <Seo title="Designs / Neptuno Black Tattoos" />
@@ -24,62 +31,99 @@ export default function DesignUploadPage() {
       >
         <h1 className="text-4xl title mb-12 mt-4">Subir Diseño</h1>
 
-        <form
-          onSubmit={submitHandler}
-          className="flex-1 flex flex-col items-center mx-auto relatie"
-        >
-          <input
-            onChange={uploadImageHandler}
-            ref={fileInputRef}
-            className="hidden"
-            required
-            id="image"
-            name="image"
-            type="file"
-            accept="image/png, image/jpeg"
-          />
-          <label
-            htmlFor="image"
-            className="bg-white py-3 px-8 text-black font-bold text-xl mb-2 cursor-pointer border-2 rounded-md hover:bg-black hover:text-white transition-colors"
+        <Form {...form}>
+          <form
+            onSubmit={onSubmit}
+            className="w-full flex flex-col items-center mx-auto relative gap-4 [&>*]:w-full"
           >
-            {design.image.url === null ? 'Subir Imagen' : 'Cambiar Imágen'}
-          </label>
-
-          <DesignAdminImageRender design={design} />
-          <DesignAdminInputs
-            design={design}
-            fetch={fetch}
-            precioHandler={precioHandler}
-          />
-          {fetch.error ? (
-            <span className="text-red-500 text-center w-full">
-              {fetch.error}
-            </span>
-          ) : (
-            <div className="h-12"></div>
-          )}
-        </form>
-
-        <div
-          id="loading_screen"
-          className={`absolute top-0 left-0 transition-colors z-20 w-full h-full flex justify-center items-center
-      max-[630px]:fixed pointer-events-none 
-      ${fetch.loading ? 'bg-white/50 pointer-events-auto' : ''}
-      ${fetch.success ? 'bg-green-400/60 pointer-events-auto' : ''}
-      ${fetch.error ? 'bg-red-400/70 pointer-events-auto' : ''}`}
-        >
-          {fetch.loading && <Spinner className="w-8 h-8" />}
-          {fetch.success && (
-            <span className="text-black text-xl font-bold text-center">
-              El diseño se subió correctamente.
-            </span>
-          )}
-          {fetch.error && (
-            <span className="text-black text-xl font-bold text-center">
-              {fetch.error}
-            </span>
-          )}
-        </div>
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange } }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Imágen</FormLabel>
+                    <FormControl>
+                      <ImagePicker
+                        ref={imageSelectorRef}
+                        onChange={onChange}
+                        accept="image/webp,image/jpg,image/png,image/jpeg"
+                        render={(url) => <img src={url} alt="" />}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="extra_images"
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel>Imágenes extra del tatuaje</FormLabel>
+                    <FormControl>
+                      <ExtraImagesSelector
+                        ref={extraImagesSelectorRef}
+                        value={value}
+                        onChange={onChange}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Las imágenes secundarias del tatuaje.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="nombre"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      Este nombre será el que se utilizará en el título de la
+                      página del diseño, y también se utiliza para generar la
+                      url.
+                    </FormDescription>
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="descripcion"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Descripción</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} rows={3} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      La descripción que aparecerá en la página del diseño.
+                    </FormDescription>
+                  </FormItem>
+                )
+              }}
+            />
+            {form.formState.errors.root && (
+              <span className="text-destructive">
+                {form.formState.errors.root.message}
+              </span>
+            )}
+            <SubmitButton loading={form.formState.isSubmitting} />
+          </form>
+        </Form>
       </main>
     </>
   )

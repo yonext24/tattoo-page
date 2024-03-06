@@ -1,78 +1,128 @@
-import { agregarDiseño, subirImagen } from '@/lib/firebase/utils'
-import { type Design } from '@/lib/types/design'
-import { INITIAL_DESIGN_UPLOADER_STATE, designUploadReducer } from '@/reducers/designUploadReducer'
-import { useEffect, useReducer, useRef } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { agregarDiseño, generateSlug, subirImagen } from '@/lib/firebase/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import useUser from './useUser'
+import { toast } from 'sonner'
+import { appFetch } from '@/lib/appFetch'
+import { ImageCompressionApiEndpointResponse } from '@/pages/api/upload-image'
+import { auth } from '@/lib/firebase/app'
+import { DesignWithoutId } from '@/lib/types/design'
 
-export function useUploadDesign () {
-  const [state, dispatch] = useReducer(designUploadReducer, INITIAL_DESIGN_UPLOADER_STATE)
+const ACCEPTED_TYPES = [
+  'image/webp',
+  'image/jpg',
+  'image/png',
+  'image/jpeg',
+  'image/jfif'
+]
+const formSchema = z.object({
+  nombre: z
+    .string({ required_error: 'El nombre es obligatorio.' })
+    .min(1, { message: 'El nombre debe tener al menos un caracter.' })
+    .max(30, { message: 'El nombre no debe tener más de 30 caracteres.' }),
+  extra_images: z
+    .instanceof(File)
+    .refine((image) => ACCEPTED_TYPES.includes(image.type), {
+      message: `El formato de una de las imágenes extra no esta permitido, los formatos permitidos son los siguientes ${ACCEPTED_TYPES.map((el) => el.split('/')[1]).join(', ')}.`
+    })
+    .array(),
+  image: z
+    .instanceof(File, { message: 'La imágen es obligatoria.' })
+    .refine((image) => ACCEPTED_TYPES.includes(image.type), {
+      message: `El formato de la imágen no esta permitido, los formatos permitidos son los siguientes ${ACCEPTED_TYPES.map((el) => el.split('/')[1]).join(', ')}.`
+    }),
+  descripcion: z
+    .string()
+    .max(800, {
+      message: 'El tamaño máximo de la descripción es de 800 caracteres.'
+    })
+    .optional()
+})
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export type AddDesignFormTypes = z.infer<typeof formSchema>
+const formDefaultValues = {
+  descripcion: '',
+  image: undefined,
+  nombre: '',
+  extra_images: []
+}
+
+export function useUploadDesign() {
+  const form = useForm<AddDesignFormTypes>({
+    resolver: zodResolver(formSchema)
+  })
+  const { handleSubmit, setError } = form
+  const user = useUser()
+
+  const imageSelectorRef = useRef<any>()
+  const extraImagesSelectorRef = useRef<any>()
 
   useEffect(() => {
-    const id = setTimeout(() => {
-      dispatch({ type: 'setReset' })
-    }, 2500)
-
-    if (fileInputRef.current != null) {
-      fileInputRef.current.files = null
+    if (form.formState.isSubmitSuccessful) {
+      form.reset(formDefaultValues)
     }
+  }, [form.formState.isSubmitSuccessful])
 
-    return () => { clearTimeout(id) }
-  }, [state.fetch.error, state.fetch.success])
-
-  const uploadImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'uploadImageLoading' })
-    const files = e.target.files
-    if (!((files != null) && files.length > 0)) return
-    const url = URL.createObjectURL(files[0])
-    dispatch({ type: 'updateImageData', payload: url })
-  }
-  const precioHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'updateImagePrice', payload: e.target.value })
-  }
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    dispatch({ type: 'setSubmitLoading' })
-    const formData = new FormData(e.target as HTMLFormElement)
-
-    const {
-      nombre,
-      precio,
-      image
-    } = Object.fromEntries(formData)
-
-    let src: string, path: string
-    let compressedSrc: string, compressedPath: string
-    try {
-      const { original, compressed } = await subirImagen(image as File, false)
-      src = original.src
-      path = original.path
-      compressedSrc = compressed.src
-      compressedPath = compressed.path
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Hubo un error al subir la imágen'
-      dispatch({ type: 'setSubmitError', payload: errorMessage })
+  const onSubmit = handleSubmit(async (data) => {
+    if (!user || !user.isAdmin) {
+      setError('root', { message: 'No estás autorizado.' })
       return
     }
+    const toastId = 'add-design-loading-toast'
+    toast.loading('El diseño se está creando', { id: toastId })
 
-    const finalData: Design = {
-      id: 'placeholder',
-      nombre: nombre as string,
-      precio: precio as string,
-      image: {
-        path,
-        src,
-        compressed: {
-          src: compressedSrc,
-          path: compressedPath
+    try {
+      const slug = await generateSlug(data.nombre, [], 'design')
+
+      const toSend = new FormData()
+      toSend.append('images', data.image)
+      data.extra_images.forEach((image) => {
+        toSend.append('images', image)
+      })
+      toSend.append('path', `/designs/${slug}`)
+      toSend.append('slug', slug)
+
+      const token = await auth.currentUser?.getIdToken?.(true)
+      const images = await appFetch<ImageCompressionApiEndpointResponse>(
+        '/api/upload-image',
+        {
+          body: toSend,
+          method: 'POST',
+          headers: { authentication: token ?? '' }
         }
+      )
+      if (!images.data || images.data.length <= 0) return
+      const original = images.data[0]
+      const extraImages = images.data.length ? images.data.slice(1) : []
+
+      const design: DesignWithoutId = {
+        images: {
+          original,
+          extraImages
+        },
+        slug,
+        nombre: data.nombre,
+        descripcion: data.descripcion
       }
+
+      await agregarDiseño(design).then(() => {
+        toast.success('Diseño creado con éxito', { id: toastId })
+      })
+    } catch (error) {
+      console.error(error)
+      setError('root', { message: 'Ocurrió un error al subir el diseño.' })
+      toast.error('Ocurrió un error al subir el diseño.', { id: toastId })
+      return
     }
+  })
 
-    agregarDiseño(finalData)
-      .then(() => { dispatch({ type: 'setSubmitSuccess' }) })
-      .catch(() => { dispatch({ type: 'setSubmitError', payload: 'Error al subir el documento a la base de datos' }) })
+  return {
+    form,
+    onSubmit,
+    imageSelectorRef,
+    extraImagesSelectorRef
   }
-
-  return { submitHandler, precioHandler, uploadImageHandler, state, fileInputRef }
 }

@@ -1,5 +1,4 @@
 /* eslint-disable no-new */
-// Import the functions you need from the SDKs you need
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import {
   addDoc,
@@ -11,17 +10,16 @@ import {
   where
 } from 'firebase/firestore'
 import {
-  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable
 } from 'firebase/storage'
-import { auth, storage } from './app'
+import { auth } from './app'
 import { designsCollection, tattoosCollection } from './collections'
 import { TattooWithoutId, type Tattoo } from '../types/tattoo'
 import Compressor from 'compressorjs'
-import { type DesignImage, type Design } from '../types/design'
+import { Design, type DesignWithoutId } from '../types/design'
 import { AppUser, USER_POSSIBLE_STATES } from '@/hooks/useUser'
 
 async function checkIfAdmin(): Promise<boolean> {
@@ -54,14 +52,13 @@ export const cerrarSesion = async () => {
   await auth.signOut()
 }
 
-export const subirImagen = async (file: File, isTattoo: boolean) => {
+export const subirImagen = async (file: File, id: string) => {
   const isAdmin = await checkIfAdmin()
   if (!isAdmin)
     throw new Error('No tenés permisos, cerrá sesión y volvé a abrirla.')
 
   const storage = getStorage()
-  const fileName = String(Date.now()) + '.' + file.name.split('.')[1]
-  const path = isTattoo ? 'tattoos' : 'designs'
+  const fileType = file.name.split('.')[1]
 
   let compressedImage: File | Blob
   try {
@@ -92,8 +89,8 @@ export const subirImagen = async (file: File, isTattoo: boolean) => {
     throw new Error(errorMessage)
   }
 
-  const compressedRef = ref(storage, `/${path}/compressed/${fileName}`)
-  const originalRef = ref(storage, `/${path}/${fileName}`)
+  const compressedRef = ref(storage, `/designs/compressed.${fileType}`)
+  const originalRef = ref(storage, `/designs/${id}/original.${fileType}`)
 
   try {
     await Promise.all([
@@ -187,14 +184,14 @@ export const getDesigns = async () => {
     })
   })
 }
-export const getSingleDesign = async (id: string) => {
-  const docRef = doc(designsCollection, id)
-  return await getDoc(docRef).then((doc) => {
-    if (!doc.exists()) {
+export const getSingleDesign = async (slug: string) => {
+  const q = query(designsCollection, where('slug', '==', slug))
+  return await getDocs(q).then((docs) => {
+    if (docs.empty) {
       throw new Error('No se encontró el tatuaje.')
     }
-    const data = doc.data()
-    return { ...data }
+    const data = docs.docs[0].data()
+    return { ...data } satisfies Design
   })
 }
 
@@ -211,14 +208,9 @@ export const agregarTatuaje = async (tattoo: TattooWithoutId) => {
   }
 }
 
-export const agregarDiseño = async ({ nombre, precio, image }: Design) => {
+export const agregarDiseño = async (design: DesignWithoutId) => {
   try {
-    const docRef = await addDoc(designsCollection, {
-      nombre,
-      precio,
-      image,
-      id: 'placeholder'
-    })
+    const docRef = await addDoc(designsCollection, design)
     return docRef
   } catch (err) {
     const errorMessage =
@@ -228,18 +220,6 @@ export const agregarDiseño = async ({ nombre, precio, image }: Design) => {
     throw new Error(errorMessage)
   }
 }
-
-// export const generateRandomSlugs = async () => {
-//   const allTattoos = await getTattoos(false)
-//   allTattoos.map(async tattoo => {
-//     const newSlug = await generateTattooSlug(tattoo.nombre, tattoo.estilos)
-//     const docRef = doc(tattoosCollection, tattoo.id)
-
-//     await updateDoc(docRef, { slug: newSlug })
-//   })
-
-//   await Promise.all(allTattoos)
-// }
 
 export function removeAccents(input: string): string {
   const accentMap: Record<string, string> = {
@@ -262,8 +242,13 @@ const normalizeValue = (str: string | number) => {
   )
 }
 
-export const generateTattooSlug = async (title: string, styles: string[]) => {
-  const extraWords = ['tatuaje', 'tattoo']
+export const generateSlug = async (
+  title: string,
+  styles: string[],
+  type: 'tattoo' | 'design' = 'tattoo'
+) => {
+  const extraWords =
+    type === 'tattoo' ? ['tatuaje', 'tattoo'] : ['design', 'dibujo', 'art']
   let alreadyTriedRaw = styles.length <= 0
   let retryNumber = 1
   let initialSlice = styles.length >= 2 ? 2 : styles.length
@@ -291,8 +276,8 @@ export const generateTattooSlug = async (title: string, styles: string[]) => {
       alreadyTriedRaw = true
     } else initialSlice++
 
-    console.log({ slug })
-    const tattoo = await getSingleTattoo(slug).catch(() => false)
+    const func = type === 'tattoo' ? getSingleTattoo : getSingleDesign
+    const tattoo = await func(slug).catch(() => false)
     if (!tattoo) {
       return trimEnd(slug, '-')
     }

@@ -5,7 +5,6 @@ import sharp from 'sharp'
 export const checkIfAdmin = async (token: string) => {
   const admin = await auth.verifyIdToken(token)
   const user = await auth.getUser(admin.uid)
-  console.log(user, user.customClaims)
 
   return user.customClaims?.admin === true
 }

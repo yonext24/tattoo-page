@@ -2,21 +2,22 @@ import {
   type QueryDocumentSnapshot,
   type SnapshotOptions
 } from 'firebase/firestore'
+import { type ImageData } from './tattoo'
 
-export interface DesignImage {
-  src: string
-  path: string
-  compressed: {
-    src: string
-    path: string
+export interface DesignImage extends ImageData {}
+
+export interface DesignWithoutId {
+  slug: string
+  images: {
+    original: DesignImage
+    extraImages: DesignImage[]
   }
+  nombre: string
+  descripcion?: string
 }
 
-export interface Design {
+export interface Design extends DesignWithoutId {
   id: string
-  image: DesignImage
-  nombre: string
-  precio: string
 }
 
 export const designsConverter = {

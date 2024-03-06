@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { agregarTatuaje, generateTattooSlug } from '@/lib/firebase/utils'
+import { agregarTatuaje, generateSlug } from '@/lib/firebase/utils'
 import { TattooWithoutId, type Tattoo } from '@/lib/types/tattoo'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -12,8 +12,20 @@ import useUser from './useUser'
 import { toast } from 'sonner'
 import { auth } from '@/lib/firebase/app'
 
+const ACCEPTED_TYPES = [
+  'image/webp',
+  'image/jpg',
+  'image/png',
+  'image/jpeg',
+  'image/jfif'
+]
+
 const formSchema = z.object({
-  image: z.instanceof(File, { message: 'La imágen es obligatoria.' }),
+  image: z
+    .instanceof(File, { message: 'La imágen es obligatoria.' })
+    .refine((image) => ACCEPTED_TYPES.includes(image.type), {
+      message: `El formato de la imágen no esta permitido, los formatos permitidos son los siguientes ${ACCEPTED_TYPES.map((el) => el.split('/')[1]).join(', ')}.`
+    }),
   nombre: z
     .string({ required_error: 'El nombre es obligatorio.' })
     .min(1, { message: 'El nombre debe tener al menos un caracter.' })
@@ -31,7 +43,12 @@ const formSchema = z.object({
   tags: z.array(
     z.string().min(1, { message: 'Los estilos deben tener mínimo un caracter' })
   ),
-  extra_images: z.instanceof(File).array()
+  extra_images: z
+    .instanceof(File)
+    .refine((image) => ACCEPTED_TYPES.includes(image.type), {
+      message: `El formato de una de las imágenes extra no esta permitido, los formatos permitidos son los siguientes ${ACCEPTED_TYPES.map((el) => el.split('/')[1]).join(', ')}.`
+    })
+    .array()
 })
 
 export type AddTattooFormTypes = z.infer<typeof formSchema>
@@ -75,7 +92,7 @@ export function useUploadTattoo() {
 
     try {
       const { descripcion, nombre, image, estilos, homeVisible } = data
-      const slug = await generateTattooSlug(nombre, estilos)
+      const slug = await generateSlug(nombre, estilos)
       console.log({ slug })
       const toSend = new FormData()
       toSend.set('slug', slug)
@@ -117,13 +134,9 @@ export function useUploadTattoo() {
         }
       }
 
-      await agregarTatuaje(tattoo)
-        .catch((err) => {
-          setError('root', { message: err.message })
-        })
-        .then(() => {
-          toast.success('Tatuaje creado con éxito', { id: toastId })
-        })
+      await agregarTatuaje(tattoo).then(() => {
+        toast.success('Tatuaje creado con éxito', { id: toastId })
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       setError('root', { message })

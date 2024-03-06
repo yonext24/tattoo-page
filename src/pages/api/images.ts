@@ -70,8 +70,8 @@ export default async function handler(
   if (req.method !== 'POST') return res.status(405)
   if (!req.headers.authentication)
     return res.status(401).json({ error: 'No estás autorizado.' })
-  if (!checkIfAdmin(req.headers['authentication'] as string))
-    return res.status(401).json({ error: 'No estás autorizado.' })
+  const isAdmin = await checkIfAdmin(req.headers['authentication'] as string)
+  if (!isAdmin) return res.status(401).json({ error: 'No estás autorizado.' })
 
   const body = await parseBody(req)
   const parsedBody = validator.safeParse(body)
