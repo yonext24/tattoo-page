@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from '../ui/button'
 import { FormControl, FormDescription } from '../ui/form'
 import { Input } from '../ui/input'
 import { cn } from '@/lib/utils'
 
-export function Selector ({
+export function Selector({
   selectedValues,
   onChange,
   description
@@ -15,9 +15,8 @@ export function Selector ({
 }) {
   const [value, setValue] = useState<string>('')
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
+  const handleSave = useCallback(
+    (value: string) => {
       if (value === '') return
       const isValueIncluded = selectedValues.includes(value)
       if (isValueIncluded) return
@@ -26,6 +25,18 @@ export function Selector ({
 
       onChange(newSelectedValues)
       setValue('')
+    },
+    [setValue, onChange, selectedValues]
+  )
+
+  const handleButtonClick = () => {
+    handleSave(value)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSave(value)
     }
   }
 
@@ -39,7 +50,9 @@ export function Selector ({
       <div className="flex gap-2 flex-wrap">
         {selectedValues.map((value) => (
           <Button
-            onClick={() => { handleDelete(value) }}
+            onClick={() => {
+              handleDelete(value)
+            }}
             key={value}
             variant="outline"
             size="sm"
@@ -51,15 +64,22 @@ export function Selector ({
       </div>
 
       <FormControl>
-        <Input
-          onChange={(e) => { setValue(e.target.value) }}
-          value={value}
-          onKeyDown={handleKeyDown}
-          className={cn(
-            'w-full py-1',
-            selectedValues.length > 0 && 'border-border'
-          )}
-        />
+        <div className="flex gap-2 w-full">
+          <Input
+            onChange={(e) => {
+              setValue(e.target.value)
+            }}
+            value={value}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              'py-1 flex-1',
+              selectedValues.length > 0 && 'border-border'
+            )}
+          />
+          <Button type="button" onClick={handleButtonClick}>
+            Guardar
+          </Button>
+        </div>
       </FormControl>
       {description && <FormDescription>{description}</FormDescription>}
     </div>
