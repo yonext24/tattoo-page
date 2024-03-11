@@ -12,7 +12,7 @@ export function TattooFooter({ name, loaded }: Props) {
   to-black via-transparent rounded-[inherit] flex flex-col justify-end items-end`}
     >
       <Logo className="w-16 brightness-[20]" brightness="[20]" />
-      <h5 className="text-sm sm:text-md md:text-xl select-none capitalize text-end">
+      <h5 className="text-sm sm:text-md md:text-lg select-none capitalize text-end">
         {name}
       </h5>
     </div>

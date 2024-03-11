@@ -26,7 +26,7 @@ export default function TattooPage({
   return (
     <>
       <Seo
-        title={`${tattoo.nombre} / Neptuno Black Tatuajes`}
+        title={`${tattoo.nombre} / Neptuno Ink Tatuajes`}
         description={'Página de los tatuajes realizados por Alan Hernandez.'}
         image={tattoo.images.compressed.src}
         imageType="image/webp"
@@ -45,7 +45,7 @@ export default function TattooPage({
             className="py-2 px-4 after:top-0 max-[730px]:text-sm w-max self-end flex gap-2"
             Icon={WhatsappIcon}
           />
-          {user && user.isAdmin && <Options id={tattoo.id} />}
+          {user && user.isAdmin && <Options tattoo={tattoo} />}
         </div>
         <Footer />
       </main>

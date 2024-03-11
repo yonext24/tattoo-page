@@ -4,9 +4,7 @@ import { PageHeading } from '@/components/common/page-heading'
 import { Seo } from '@/components/common/seo'
 import { SearchInput } from '@/components/search/search-input'
 import { SearchRender } from '@/components/search/search-render'
-import { useModalContext } from '@/hooks/useModalContext'
 import { useSearch } from '@/hooks/useSearch'
-import { useWindowContext } from '@/hooks/useWindowContext'
 import { searchTatttoos } from '@/lib/firebase/utils'
 import { type Tattoo } from '@/lib/types/tattoo'
 import { type GetServerSidePropsContext } from 'next'
@@ -25,8 +23,6 @@ export default function Busqueda({
   error: serverError,
   query
 }: Props) {
-  const { state } = useModalContext() ?? {}
-  const { isMobile } = useWindowContext() ?? {}
   const {
     onChange,
     value,
@@ -37,9 +33,9 @@ export default function Busqueda({
   return (
     <>
       <Seo
-        title="Búsqueda / Neptuno Black"
+        title="Búsqueda / Neptuno Ink"
         description={
-          'Página de búsqueda de tatuajes de Neptuno Black, Alan Hernandez.' +
+          'Página de búsqueda de tatuajes de Neptuno Ink, Alan Hernandez.' +
           defaultDesc
         }
         image={`${siteURL}/logo.webp`}
@@ -78,10 +74,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       }
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.error(error)
     return {
       props: {
-        error: errorMessage,
+        error: 'Algo salió mal buscando los tatuajes. Intenta de nuevo.',
         query: search
       }
     }

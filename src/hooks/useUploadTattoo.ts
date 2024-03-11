@@ -29,7 +29,8 @@ const formSchema = z.object({
   nombre: z
     .string({ required_error: 'El nombre es obligatorio.' })
     .min(1, { message: 'El nombre debe tener al menos un caracter.' })
-    .max(30, { message: 'El nombre no debe tener más de 30 caracteres.' }),
+    .max(30, { message: 'El nombre no debe tener más de 30 caracteres.' })
+    .transform((s) => s.trim()),
   descripcion: z
     .string()
     .max(400, {
@@ -38,10 +39,16 @@ const formSchema = z.object({
     .optional(),
   homeVisible: z.boolean().default(true),
   estilos: z.array(
-    z.string().min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+    z
+      .string()
+      .min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+      .transform((s) => s.trim())
   ),
   tags: z.array(
-    z.string().min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+    z
+      .string()
+      .min(1, { message: 'Los estilos deben tener mínimo un caracter' })
+      .transform((s) => s.trim())
   ),
   extra_images: z
     .instanceof(File)
@@ -93,7 +100,6 @@ export function useUploadTattoo() {
     try {
       const { descripcion, nombre, image, estilos, homeVisible } = data
       const slug = await generateSlug(nombre, estilos)
-      console.log({ slug })
       const toSend = new FormData()
       toSend.set('slug', slug)
       toSend.append('primary', image)
@@ -125,6 +131,7 @@ export function useUploadTattoo() {
         descripcion: descripcion as string,
         nombre,
         estilos,
+        tags: data.tags,
         slug,
         homeVisible,
         images: {

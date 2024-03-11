@@ -12,6 +12,7 @@ export type ImageData = {
 
 export interface TattooWithoutId {
   slug: string
+  tags: string[]
   images: {
     original: ImageData
     compressed: ImageData

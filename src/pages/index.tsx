@@ -7,7 +7,6 @@ import { About } from '@/components/home/about'
 import { MediaCard } from '@/components/home/media-card'
 import Image from 'next/image'
 import { type ReactNode } from 'react'
-import { siteURL } from '@/lib/env'
 import { defaultDesc } from '@/lib/consts'
 
 const medias = [
@@ -19,9 +18,9 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Neptuno Black Tatuajes Lanús"
-        image={`/alan.webp`}
-        width="630"
+        title="Neptuno Ink Tatuajes Lanús"
+        image={`/alanopgph.webp`}
+        width="1200"
         height="1200"
         imageType="image/webp"
         description={`Alan Hernandez, plasmando arte en la piel desde 2018. ${defaultDesc}`}

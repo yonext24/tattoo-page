@@ -2,11 +2,14 @@
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import {
   addDoc,
+  and,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  or,
   query,
+  updateDoc,
   where
 } from 'firebase/firestore'
 import {
@@ -143,14 +146,22 @@ export const searchTatttoos = async ({
 }: {
   search: string
 }): Promise<Tattoo[]> => {
-  const tattoos = await getTattoos(false)
+  if (!search) return await getTattoos(false)
 
-  const parsed = tattoos.filter(({ nombre, estilos }) => {
-    if (nombre.includes(search) || estilos.includes(search)) return true
-    return false
+  const q = query(
+    tattoosCollection,
+    or(
+      and(where('slug', '>=', search), where('slug', '<=', search + '\uf8ff')),
+      where('tags', 'array-contains', search),
+      where('estilos', 'array-contains', search)
+    )
+  )
+  return await getDocs(q).then((snapshot) => {
+    return snapshot.docs.map((doc) => {
+      const data = doc.data()
+      return { ...data, id: doc.id }
+    })
   })
-
-  return parsed
 }
 
 export const getTattoos = async (fromHome = true) => {
@@ -221,6 +232,33 @@ export const agregarDiseño = async (design: DesignWithoutId) => {
   }
 }
 
+export async function editarDiseño(data: {
+  nombre?: string
+  descripcion?: string
+  id: string
+}) {
+  const isAdmin = await checkIfAdmin()
+  if (!isAdmin) throw new Error('No está permitido.')
+
+  const docRef = doc(designsCollection, data.id)
+  await updateDoc(docRef, data)
+}
+
+export async function editarTatuaje(data: {
+  nombre?: string
+  descripcion?: string
+  estilos?: string[]
+  tags?: string[]
+  homeVisible?: boolean
+  id: string
+}) {
+  const isAdmin = await checkIfAdmin()
+  if (!isAdmin) throw new Error('No está permitido.')
+
+  const docRef = doc(tattoosCollection, data.id)
+  await updateDoc(docRef, data)
+}
+
 export function removeAccents(input: string): string {
   const accentMap: Record<string, string> = {
     á: 'a',
@@ -238,7 +276,7 @@ export function removeAccents(input: string): string {
 
 const normalizeValue = (str: string | number) => {
   return encodeURI(
-    removeAccents(String(str).toLowerCase()).replaceAll(' ', '-')
+    removeAccents(String(str).toLowerCase().trim()).replaceAll(' ', '-')
   )
 }
 

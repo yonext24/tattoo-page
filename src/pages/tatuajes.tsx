@@ -16,36 +16,43 @@ interface Props {
   error?: string
 }
 
-export default function Tatuajes ({ tattoos, error }: Props) {
-  return <>
-    <Seo title='Tatuajes / Neptuno Black Tatuajes'
-      description={'Página de los tatuajes realizados por Alan Hernandez.' + defaultDesc}
-      image={`${siteURL}/logo.webp`}
-      imageType='image/webp'
-    />
-    <main className='flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl
-    max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none items-center' >
-      <PageHeading text='Tatuajes' />
-      <div className='flex-1 w-full flex'>
-        {
-          error !== undefined && error !== null && <ErrorComponent error={error} />
+export default function Tatuajes({ tattoos, error }: Props) {
+  return (
+    <>
+      <Seo
+        title="Tatuajes / Neptuno Ink Tatuajes"
+        description={
+          'Página de los tatuajes realizados por Alan Hernandez.' + defaultDesc
         }
-        {
-          tattoos !== undefined && <TattooSection tattoos={tattoos} />
-        }
-      </div>
-      <Footer />
-    </main>
-  </>
+        image={`${siteURL}/logo.webp`}
+        imageType="image/webp"
+      />
+      <main
+        className="flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl
+    max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none items-center"
+      >
+        <PageHeading text="Tatuajes" />
+        <div className="flex-1 w-full flex">
+          {error !== undefined && error !== null && (
+            <ErrorComponent error={error} />
+          )}
+          {tattoos !== undefined && <TattooSection tattoos={tattoos} />}
+        </div>
+        <Footer />
+      </main>
+    </>
+  )
 }
 
-Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>
-  {page}
-</Layout>
+Tatuajes.getLayout = (page: ReactNode): ReactNode => <Layout>{page}</Layout>
 
-export async function getServerSideProps (ctx: GetServerSidePropsContext) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   try {
-    const tattoos = await waitFunc<Tattoo[]>(getTattoos, 5000, 'No se pudo recuperar los tatuajes')
+    const tattoos = await waitFunc<Tattoo[]>(
+      getTattoos,
+      5000,
+      'No se pudo recuperar los tatuajes'
+    )
     return {
       props: {
         tattoos

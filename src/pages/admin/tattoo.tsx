@@ -29,7 +29,7 @@ export default function TattooUploadPage() {
 
   return (
     <>
-      <Seo title="Designs / Neptuno Black Tattoos" />
+      <Seo title="Designs / Neptuno Ink Tattoos" />
       <main
         className="flex-1 py-2 h-max overflow-y-hidden pr-2 flex flex-col min-h-screen items-center max-w-[450px] pl-2 relative
       max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none"
@@ -105,13 +105,16 @@ export default function TattooUploadPage() {
             />
             <FormField
               control={form.control}
-              name="descripcion"
+              name="homeVisible"
               render={({ field }) => {
                 return (
                   <FormItem className="flex flex-col">
                     <FormLabel>Visible en la página de tatuajes</FormLabel>
                     <FormControl>
-                      <Switch {...field} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                     <FormDescription>

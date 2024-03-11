@@ -22,9 +22,11 @@ export default function DesignUploadPage() {
   const { form, onSubmit, imageSelectorRef, extraImagesSelectorRef } =
     useUploadDesign()
 
+  console.log(form.watch('nombre'))
+
   return (
     <>
-      <Seo title="Designs / Neptuno Black Tattoos" />
+      <Seo title="Designs / Neptuno Ink Tattoos" />
       <main
         className="flex-1 h-max overflow-y-hidden pr-2 flex flex-col min-h-screen items-center max-w-xl pl-2 relative
       max-[630px]:overflow-y-auto max-[630px]:min-h-0 max-[630px]:max-w-none"

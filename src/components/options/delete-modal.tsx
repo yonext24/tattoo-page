@@ -10,15 +10,21 @@ interface Props {
 
 export function DeleteModal({ closeModal, isDesign, id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   const router = useRouter()
   const onDelete = async () => {
     setLoading(true)
     if (isDesign) {
       if (!id) return
-      await deleteDesign(id).finally(() => {
-        setLoading(false)
-      })
+      await deleteDesign(id)
+        .then(() => {
+          router.replace('/')
+          closeModal()
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     } else {
       if (!id) return
       await deleteTattoo(id)
@@ -37,6 +43,7 @@ export function DeleteModal({ closeModal, isDesign, id }: Props) {
       <h3 className="text-xl font-bold">
         Querés borrar este {isDesign ? 'diseño' : 'tatuaje'}?
       </h3>
+      {error && <div className="text-destructive text-sm">{error}</div>}
       <div className="flex [&>button]:p-2 [&>button]:flex-1 [&>button:nth-of-type(1)]:bg-red-500 [&>button]:rounded-sm">
         <button
           name="Borrar"

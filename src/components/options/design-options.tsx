@@ -9,21 +9,15 @@ import { Button } from '../ui/button'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { addModal } from 'react-modal-observer'
 import { DeleteModal } from './delete-modal'
-import { EditModal } from './edit-modal'
-import { Tattoo } from '@/lib/types/tattoo'
+import { Design } from '@/lib/types/design'
+import { EditDesignModal } from './edit-design-modal'
 
-export function Options({
-  tattoo,
-  isDesign = false
-}: {
-  tattoo: Tattoo
-  isDesign?: boolean
-}) {
+export function DesignOptions({ design }: { design: Design }) {
   const handleDelete = () => {
-    addModal(DeleteModal, { isDesign, id: tattoo.id })
+    addModal(DeleteModal, { isDesign: true, id: design.id })
   }
   const handleEdit = () => {
-    addModal(EditModal, { tattoo }, { noScroll: true })
+    addModal(EditDesignModal, { design }, { noScroll: true })
   }
 
   return (

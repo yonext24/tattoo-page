@@ -23,9 +23,9 @@ export default function Designs({ error, designs, singleDesign }: PageProps) {
   return (
     <>
       <Seo
-        title="Diseños / Neptuno Black"
+        title="Diseños / Neptuno Ink"
         description={
-          'Página de búsqueda de diseños disponibles o a la venta de Neptuno Black, Alan Hernandez, actualmente trabajando en Guadalupe Art Studios. ' +
+          'Página de búsqueda de diseños disponibles o a la venta de Neptuno Ink, Alan Hernandez. ' +
           defaultDesc
         }
         image={`${siteURL}/logo.webp`}

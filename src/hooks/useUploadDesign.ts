@@ -52,7 +52,8 @@ const formDefaultValues = {
 
 export function useUploadDesign() {
   const form = useForm<AddDesignFormTypes>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: formDefaultValues
   })
   const { handleSubmit, setError } = form
   const user = useUser()

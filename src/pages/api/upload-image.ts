@@ -60,7 +60,6 @@ export default async function handler(
   if (!isAdmin) return res.status(401).json({ error: 'No estás autorizado.' })
 
   const body = await parseBody(req)
-  console.log(body)
   const parsedBody = validator.safeParse(body)
 
   if (!parsedBody.success) {

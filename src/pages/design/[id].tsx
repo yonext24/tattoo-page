@@ -3,6 +3,8 @@ import { Seo } from '@/components/common/seo'
 import { DesignImages } from '@/components/design-page/design-images'
 import { Footer } from '@/components/footer/footer'
 import { Layout } from '@/components/layout/layout'
+import { DesignOptions } from '@/components/options/design-options'
+import useUser from '@/hooks/useUser'
 import { waitFunc } from '@/lib/consts'
 import { getDesigns, getSingleDesign } from '@/lib/firebase/utils'
 import { Design } from '@/lib/types/design'
@@ -11,12 +13,14 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 export default function DesignPage({
   design
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const user = useUser()
+
   if (!design) return null
 
   return (
     <>
       <Seo
-        title={`${design.nombre} / Neptuno Black Tatuajes`}
+        title={`${design.nombre} / Neptuno Ink Tatuajes`}
         description={'Página de los diseños realizados por Alan Hernandez.'}
         image={design.images.original.src}
         imageType="image/webp"
@@ -33,6 +37,7 @@ export default function DesignPage({
           )}
         </div>
         <Footer />
+        {user && user.isAdmin && <DesignOptions design={design} />}
       </main>
     </>
   )

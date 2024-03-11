@@ -3,8 +3,7 @@ import { type Tattoo } from '@/lib/types/tattoo'
 import { INITIAL_STATE, searchReducer } from '@/reducers/searchReducer'
 
 import debounce from 'just-debounce-it'
-import { useState, useEffect, useCallback, useReducer, useRef } from 'react'
-import { useModalContext } from './useModalContext'
+import { useState, useEffect, useCallback, useReducer } from 'react'
 import { fetchSearch } from '@/lib/consts'
 import { useRouter } from 'next/router'
 
@@ -17,21 +16,12 @@ interface Props {
 export function useSearch({ tattoos, query, serverError }: Props) {
   const [value, setValue] = useState<string>(query)
   const [state, dispatch] = useReducer(searchReducer, INITIAL_STATE)
-  const { state: modalState, dispatch: modalDispatch } = useModalContext() ?? {}
-
-  const modalOpened = useRef<boolean>(false)
 
   useEffect(() => {
     if (serverError !== undefined) {
       dispatch({ type: 'FETCH_FAILURE', payload: serverError })
     }
   }, [serverError])
-
-  useEffect(() => {
-    if ((modalState?.open ?? false) && !modalOpened.current) {
-      modalOpened.current = true
-    }
-  }, [modalState?.open])
 
   useEffect(() => {
     if (tattoos !== undefined && state.tattoos.length === 0) {
@@ -55,9 +45,9 @@ export function useSearch({ tattoos, query, serverError }: Props) {
           { shallow: true, scroll: false }
         )
       } catch (error) {
-        const errorMessage = String(
-          error instanceof Error ? error.message : error
-        )
+        console.error(error)
+        const errorMessage =
+          'Algo salió mal al buscar los tatuajes, intenta denuevo.'
         dispatch({ type: 'FETCH_FAILURE', payload: errorMessage })
       }
     }, 500),

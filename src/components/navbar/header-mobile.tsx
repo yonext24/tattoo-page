@@ -29,7 +29,7 @@ export default function HeaderMobile() {
 
         <Link href="/">
           <h2 className="title text-end text-2xl">
-            Neptuno Black{' '}
+            Neptuno Ink{' '}
             <span className="font-[inherit] max-[345px]:hidden">Tatuajes</span>
           </h2>
         </Link>

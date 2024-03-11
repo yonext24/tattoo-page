@@ -10,7 +10,7 @@ export function TattooMainImage({
 }) {
   return (
     <div className="rounded-md overflow-hidden relative flex flex-col-reverse">
-      <div className="bg-white h-[24px] w-full justify-end text-black flex gap-y-2 px-2">
+      <div className="bg-white h-[24px] w-full justify-end text-black flex gap-2 px-2">
         {estilos.length > 0 ? (
           estilos.map((el) => <span key={el}>{el}</span>)
         ) : (

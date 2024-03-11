@@ -42,7 +42,7 @@ export default function Login() {
 
   return (
     <>
-      <Seo title="Login / Neptuno Black" />
+      <Seo title="Login / Neptuno Ink" />
 
       <main
         className="flex-1 pr-2 h-max overflow-y-hidden flex flex-col min-h-screen max-w-xl justify-center
